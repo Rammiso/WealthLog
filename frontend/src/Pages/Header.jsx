@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { useAuth } from "../Context/AuthContext";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
   const closeMenu = () => setMenuOpen(false);
@@ -115,31 +117,62 @@ function Header() {
               )}
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/login" className={linkClass} onClick={closeMenu}>
-              {({ isActive }) => (
-                <motion.div whileHover={{ y: -2 }} className="relative py-1">
-                  Sign In
-                  {isActive && activeLinkUnderline}
-                </motion.div>
-              )}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/getStarted"
-              onClick={closeMenu}
-            >
-              <motion.div
-                className="px-6 py-2.5 rounded-lg bg-neon-gradient text-dark-primary font-semibold font-mono text-sm uppercase tracking-wider shadow-neon-cyan hover:shadow-neon-cyan-lg transition-all duration-300 relative overflow-hidden group"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <span className="relative z-10">Get Started</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-green opacity-0 group-hover:opacity-20 transition-opacity bg-[length:200%_100%] animate-shimmer"></div>
-              </motion.div>
-            </NavLink>
-          </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <NavLink to="/dashboard" className={linkClass} onClick={closeMenu}>
+                  {({ isActive }) => (
+                    <motion.div whileHover={{ y: -2 }} className="relative py-1 flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      Dashboard
+                      {isActive && activeLinkUnderline}
+                    </motion.div>
+                  )}
+                </NavLink>
+              </li>
+              <li>
+                <motion.button
+                  onClick={() => {
+                    logout();
+                    closeMenu();
+                  }}
+                  className="flex items-center gap-2 text-gray-300 font-medium font-mono text-sm uppercase tracking-wider transition-all duration-300 hover:text-red-400"
+                  whileHover={{ y: -2 }}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </motion.button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <NavLink to="/login" className={linkClass} onClick={closeMenu}>
+                  {({ isActive }) => (
+                    <motion.div whileHover={{ y: -2 }} className="relative py-1">
+                      Sign In
+                      {isActive && activeLinkUnderline}
+                    </motion.div>
+                  )}
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/getStarted"
+                  onClick={closeMenu}
+                >
+                  <motion.div
+                    className="px-6 py-2.5 rounded-lg bg-neon-gradient text-dark-primary font-semibold font-mono text-sm uppercase tracking-wider shadow-neon-cyan hover:shadow-neon-cyan-lg transition-all duration-300 relative overflow-hidden group"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="relative z-10">Get Started</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-green opacity-0 group-hover:opacity-20 transition-opacity bg-[length:200%_100%] animate-shimmer"></div>
+                  </motion.div>
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
 
         {/* Mobile Navigation */}
@@ -186,25 +219,55 @@ function Header() {
                   )}
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/login" className={linkClass} onClick={closeMenu}>
-                  {({ isActive }) => (
-                    <div className="py-3 px-2">
-                      Sign In
-                      {isActive && activeLinkUnderline}
-                    </div>
-                  )}
-                </NavLink>
-              </li>
-              <li className="pt-2 border-t border-gray-700/50">
-                <NavLink
-                  to="/getStarted"
-                  className="px-6 py-3 rounded-lg bg-neon-gradient text-dark-primary font-semibold font-mono text-sm uppercase tracking-wider shadow-neon-cyan text-center block"
-                  onClick={closeMenu}
-                >
-                  Get Started
-                </NavLink>
-              </li>
+              {isAuthenticated ? (
+                <>
+                  <li>
+                    <NavLink to="/dashboard" className={linkClass} onClick={closeMenu}>
+                      {({ isActive }) => (
+                        <div className="py-3 px-2 flex items-center gap-2">
+                          <User className="w-4 h-4" />
+                          Dashboard
+                          {isActive && activeLinkUnderline}
+                        </div>
+                      )}
+                    </NavLink>
+                  </li>
+                  <li className="pt-2 border-t border-gray-700/50">
+                    <button
+                      onClick={() => {
+                        logout();
+                        closeMenu();
+                      }}
+                      className="w-full px-6 py-3 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 font-semibold font-mono text-sm uppercase tracking-wider text-center flex items-center justify-center gap-2 hover:bg-red-500/30 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <NavLink to="/login" className={linkClass} onClick={closeMenu}>
+                      {({ isActive }) => (
+                        <div className="py-3 px-2">
+                          Sign In
+                          {isActive && activeLinkUnderline}
+                        </div>
+                      )}
+                    </NavLink>
+                  </li>
+                  <li className="pt-2 border-t border-gray-700/50">
+                    <NavLink
+                      to="/getStarted"
+                      className="px-6 py-3 rounded-lg bg-neon-gradient text-dark-primary font-semibold font-mono text-sm uppercase tracking-wider shadow-neon-cyan text-center block"
+                      onClick={closeMenu}
+                    >
+                      Get Started
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </motion.ul>
           )}
         </AnimatePresence>

@@ -1,21 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, Chrome, Shield } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Chrome, Shield } from "lucide-react";
 import { useAuth } from "../Context/AuthContext";
 import Input from "../Components/ui/Input";
 import Button from "../Components/ui/Button";
 import Card from "../Components/ui/Card";
-import loginImage from "../assets/Images/bg-5.jpeg";
 
-export default function Login() {
+export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
+    confirmPassword: "",
+    currency: "ETB",
   });
   const [errors, setErrors] = useState({});
-  const { login, isLoading, error, clearError, isAuthenticated } = useAuth();
+  const { register, isLoading, error, clearError, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -36,6 +40,14 @@ export default function Login() {
 
   const validateField = (name, value) => {
     switch (name) {
+      case "firstName":
+        if (!value) return "First name is required";
+        if (value.length < 2) return "First name must be at least 2 characters";
+        break;
+      case "lastName":
+        if (!value) return "Last name is required";
+        if (value.length < 2) return "Last name must be at least 2 characters";
+        break;
       case "email":
         if (!value) return "Email is required";
         if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value))
@@ -44,6 +56,12 @@ export default function Login() {
       case "password":
         if (!value) return "Password is required";
         if (value.length < 6) return "Password must be at least 6 characters";
+        if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value))
+          return "Password must contain uppercase, lowercase, and number";
+        break;
+      case "confirmPassword":
+        if (!value) return "Please confirm your password";
+        if (value !== formData.password) return "Passwords do not match";
         break;
       default:
         return "";
@@ -59,6 +77,16 @@ export default function Login() {
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
+
+    // Also validate confirm password when password changes
+    if (name === "password" && formData.confirmPassword) {
+      const confirmError = validateField("confirmPassword", formData.confirmPassword);
+      if (confirmError) {
+        setErrors({ ...errors, confirmPassword: confirmError });
+      } else {
+        setErrors({ ...errors, confirmPassword: "" });
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -67,14 +95,17 @@ export default function Login() {
     // Validate all fields
     const newErrors = {};
     Object.keys(formData).forEach((field) => {
-      const error = validateField(field, formData[field]);
-      if (error) newErrors[field] = error;
+      if (field !== 'currency') { // Currency is optional
+        const error = validateField(field, formData[field]);
+        if (error) newErrors[field] = error;
+      }
     });
 
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      const result = await login(formData.email, formData.password);
+      const { confirmPassword, ...registrationData } = formData;
+      const result = await register(registrationData);
       
       if (result.success) {
         // Redirect to intended page or dashboard
@@ -87,8 +118,8 @@ export default function Login() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
+  const handleGoogleRegister = () => {
+    console.log("Google registration clicked");
   };
 
   return (
@@ -115,7 +146,7 @@ export default function Login() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-neon-cyan/30 shadow-2xl shadow-neon-cyan/10 backdrop-blur-sm h-[600px] bg-gradient-to-br from-dark-primary via-dark-secondary to-dark-primary">
+          <div className="relative overflow-hidden rounded-2xl border border-neon-cyan/30 shadow-2xl shadow-neon-cyan/10 backdrop-blur-sm h-[700px] bg-gradient-to-br from-dark-primary via-dark-secondary to-dark-primary">
             {/* Animated Background */}
             <div className="absolute inset-0">
               {/* Grid Pattern */}
@@ -161,66 +192,7 @@ export default function Login() {
                   />
                 ))}
               </div>
-              
-              {/* Floating Data Points */}
-              {[...Array(8)].map((_, i) => (
-                <motion.div
-                  key={`dot-${i}`}
-                  className="absolute w-2 h-2 rounded-full bg-neon-cyan/50"
-                  style={{
-                    left: `${10 + i * 12}%`,
-                    top: `${30 + (i % 3) * 20}%`
-                  }}
-                  animate={{
-                    y: [0, -20, 0],
-                    opacity: [0.3, 1, 0.3]
-                  }}
-                  transition={{
-                    duration: 2 + i * 0.3,
-                    repeat: Infinity,
-                    delay: i * 0.2
-                  }}
-                />
-              ))}
-              
-              {/* Holographic Chart Lines */}
-              <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 400 600">
-                <motion.path
-                  d="M 50 400 Q 100 300, 150 350 T 250 300 T 350 350"
-                  stroke="url(#gradient1)"
-                  strokeWidth="2"
-                  fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-                />
-                <motion.path
-                  d="M 50 450 Q 100 380, 150 420 T 250 380 T 350 420"
-                  stroke="url(#gradient2)"
-                  strokeWidth="2"
-                  fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", delay: 0.5 }}
-                />
-                <defs>
-                  <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#00ffff" stopOpacity="0" />
-                    <stop offset="50%" stopColor="#00ffff" stopOpacity="1" />
-                    <stop offset="100%" stopColor="#00ffff" stopOpacity="0" />
-                  </linearGradient>
-                  <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#39ff14" stopOpacity="0" />
-                    <stop offset="50%" stopColor="#39ff14" stopOpacity="1" />
-                    <stop offset="100%" stopColor="#39ff14" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-              </svg>
             </div>
-            
-            {/* Overlay Gradients */}
-            <div className="absolute inset-0 bg-gradient-to-t from-dark-primary via-dark-primary/50 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan/5 to-neon-green/5 mix-blend-overlay"></div>
             
             {/* Content */}
             <div className="absolute bottom-8 left-8 right-8 z-10">
@@ -231,15 +203,15 @@ export default function Login() {
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-green/10 border border-neon-green/20 mb-4 backdrop-blur-sm">
                   <Shield className="w-4 h-4 text-neon-green" />
-                  <span className="text-xs font-mono text-neon-green uppercase tracking-wider">Secure Access</span>
+                  <span className="text-xs font-mono text-neon-green uppercase tracking-wider">Secure Registration</span>
                 </div>
                 <h3 className="text-3xl font-bold text-white mb-2 font-secondary drop-shadow-[0_0_10px_rgba(0,255,255,0.3)]">
-                  Access Your Financial
+                  Join the Future of
                   <br />
-                  <span className="text-neon-green drop-shadow-[0_0_10px_rgba(57,255,20,0.5)]">Command Center</span>
+                  <span className="text-neon-green drop-shadow-[0_0_10px_rgba(57,255,20,0.5)]">Financial Intelligence</span>
                 </h3>
                 <p className="text-gray-300 font-mono text-sm">
-                  Real-time analytics • Portfolio management • Growth insights
+                  Advanced analytics • Smart insights • Secure platform
                 </p>
               </motion.div>
             </div>
@@ -266,9 +238,7 @@ export default function Login() {
                     alt="WealthLog Logo" 
                     className="w-full h-full object-contain"
                   />
-                  {/* Subtle static glow */}
                   <div className="absolute inset-0 bg-gradient-to-br from-neon-green/10 to-neon-cyan/10 mix-blend-screen"></div>
-                  {/* Border with neon-green */}
                   <div className="absolute inset-0 border-2 border-neon-green/40 rounded-xl"></div>
                 </div>
               </motion.div>
@@ -278,7 +248,7 @@ export default function Login() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
               >
-                Welcome Back
+                Create Account
               </motion.h1>
               <motion.p 
                 className="text-gray-400 font-mono text-sm"
@@ -286,7 +256,7 @@ export default function Login() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7 }}
               >
-                Sign in to access your financial intelligence platform
+                Join WealthLog and take control of your financial future
               </motion.p>
             </div>
 
@@ -304,10 +274,55 @@ export default function Login() {
                 </motion.div>
               )}
 
+              {/* Name Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  <div className="relative">
+                    <User className="absolute left-3 top-[42px] w-5 h-5 text-gray-400" />
+                    <Input
+                      label="First Name"
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      placeholder="First name"
+                      error={errors.firstName}
+                      className="pl-12"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.85 }}
+                >
+                  <div className="relative">
+                    <User className="absolute left-3 top-[42px] w-5 h-5 text-gray-400" />
+                    <Input
+                      label="Last Name"
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      placeholder="Last name"
+                      error={errors.lastName}
+                      className="pl-12"
+                      disabled={isLoading}
+                    />
+                  </div>
+                </motion.div>
+              </div>
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 0.9 }}
               >
                 <div className="relative">
                   <Mail className="absolute left-3 top-[42px] w-5 h-5 text-gray-400" />
@@ -328,7 +343,7 @@ export default function Login() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 }}
+                transition={{ delay: 0.95 }}
               >
                 <div className="relative">
                   <Lock className="absolute left-3 top-[42px] w-5 h-5 text-gray-400" />
@@ -338,7 +353,7 @@ export default function Login() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="Enter your password"
+                    placeholder="Create password"
                     error={errors.password}
                     className="pl-12 pr-12"
                     disabled={isLoading}
@@ -356,17 +371,55 @@ export default function Login() {
               </motion.div>
 
               <motion.div
-                className="flex justify-end"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.0 }}
               >
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-neon-cyan hover:text-neon-blue transition-colors"
+                <div className="relative">
+                  <Lock className="absolute left-3 top-[42px] w-5 h-5 text-gray-400" />
+                  <Input
+                    label="Confirm Password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm password"
+                    error={errors.confirmPassword}
+                    className="pl-12 pr-12"
+                    disabled={isLoading}
+                  />
+                  <motion.button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-[42px] text-gray-400 hover:text-neon-cyan transition-colors"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </motion.button>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.05 }}
+              >
+                <label className="block text-sm font-medium text-gray-300 mb-2 font-mono">
+                  Preferred Currency
+                </label>
+                <select
+                  name="currency"
+                  value={formData.currency}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-dark-secondary/50 border border-gray-700/50 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-neon-cyan/50 focus:border-neon-cyan/50 transition-all duration-300 backdrop-blur-sm font-mono"
+                  disabled={isLoading}
                 >
-                  Forgot password?
-                </Link>
+                  <option value="ETB">ETB - Ethiopian Birr</option>
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="GBP">GBP - British Pound</option>
+                </select>
               </motion.div>
 
               <motion.div
@@ -383,11 +436,11 @@ export default function Login() {
                   {isLoading ? (
                     <div className="flex items-center justify-center">
                       <div className="w-5 h-5 border-2 border-dark-primary border-t-transparent rounded-full animate-spin mr-2"></div>
-                      <span className="font-mono">Authenticating...</span>
+                      <span className="font-mono">Creating Account...</span>
                     </div>
                   ) : (
                     <>
-                      <span className="relative z-10 font-mono uppercase tracking-wider">Access Platform</span>
+                      <span className="relative z-10 font-mono uppercase tracking-wider">Create Account</span>
                       <div className="absolute inset-0 bg-gradient-to-r from-neon-green via-neon-cyan to-neon-green opacity-0 group-hover:opacity-20 transition-opacity bg-[length:200%_100%]"></div>
                     </>
                   )}
@@ -398,7 +451,7 @@ export default function Login() {
                 className="relative my-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.2 }}
+                transition={{ delay: 1.15 }}
               >
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-700/50"></div>
@@ -411,13 +464,14 @@ export default function Login() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.3 }}
+                transition={{ delay: 1.2 }}
               >
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={handleGoogleLogin}
+                  onClick={handleGoogleRegister}
                   className="w-full flex items-center justify-center gap-3 font-mono"
+                  disabled={isLoading}
                 >
                   <Chrome className="w-5 h-5" />
                   <span className="uppercase tracking-wider text-sm">Google SSO</span>
@@ -428,14 +482,14 @@ export default function Login() {
                 className="text-center text-gray-400 mt-8 text-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.4 }}
+                transition={{ delay: 1.25 }}
               >
-                <span className="font-mono">New to WealthLog?</span>{" "}
+                <span className="font-mono">Already have an account?</span>{" "}
                 <Link
-                  to="/getStarted"
+                  to="/login"
                   className="text-neon-cyan hover:text-neon-green transition-colors font-semibold font-mono uppercase tracking-wider text-xs"
                 >
-                  Create Account →
+                  Sign In →
                 </Link>
               </motion.p>
             </form>

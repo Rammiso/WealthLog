@@ -4,6 +4,9 @@ const config = require('../../config/env');
 const authRoutes = require('./authRoutes');
 const categoryRoutes = require('./categoryRoutes');
 const transactionRoutes = require('./transactionRoutes');
+const goalRoutes = require('./goalRoutes');
+const summaryRoutes = require('./summaryRoutes');
+const dashboardRoutes = require('./dashboardRoutes');
 
 const router = express.Router();
 
@@ -69,5 +72,8 @@ router.get('/', (req, res) => {
 router.use('/auth', authRoutes);
 router.use('/categories', categoryRoutes);
 router.use('/transactions', transactionRoutes);
+router.use('/goals', goalRoutes);
+router.use('/summary', summaryRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 module.exports = router;

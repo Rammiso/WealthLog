@@ -8,14 +8,14 @@
 const User = require('./User');
 const Transaction = require('./Transaction');
 const Category = require('./Category');
-// const Goal = require('./Goal');
+const Goal = require('./Goal');
 
 // Export models object
 const models = {
   User,
   Transaction,
   Category,
-  // Goal
+  Goal
 };
 
 // Helper function to get model by name

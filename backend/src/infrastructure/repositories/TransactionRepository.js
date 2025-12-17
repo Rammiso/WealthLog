@@ -173,6 +173,11 @@ class TransactionRepository extends BaseRepository {
           $lte: new Date(endDate)
         }
       };
+
+      // Add type filter if specified
+      if (options.type) {
+        filter.type = options.type;
+      }
       
       return await this.findAll(filter, { ...options, userId });
     } catch (error) {

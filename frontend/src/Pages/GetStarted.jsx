@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Eye, 
@@ -26,7 +27,7 @@ export default function GetStarted() {
     password: "",
     confirmPassword: "",
     income: "",
-    currency: "USD",
+    currency: "ETB",
     financialGoal: "",
   });
 
@@ -34,7 +35,8 @@ export default function GetStarted() {
   const [showPassword, setShowPassword] = useState(false);
   const [step, setStep] = useState(1);
   const [success, setSuccess] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, isLoading, error } = useAuth();
+  const navigate = useNavigate();
 
   const validateField = (name, value) => {
     switch (name) {
@@ -110,13 +112,30 @@ export default function GetStarted() {
     setErrors(step2Errors);
 
     if (Object.keys(step2Errors).length === 0) {
-      setIsLoading(true);
-      // Simulate API call
-      setTimeout(() => {
-        console.log("Registration submitted:", formData);
-        setIsLoading(false);
+      // Split fullname into firstName and lastName
+      const nameParts = formData.fullname.trim().split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
+      const registrationData = {
+        firstName,
+        lastName,
+        email: formData.email,
+        password: formData.password,
+        currency: formData.currency,
+      };
+
+      const result = await register(registrationData);
+      
+      if (result.success) {
         setSuccess(true);
-      }, 2000);
+        // Redirect to dashboard after showing success message
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 2000);
+      } else {
+        setErrors({ general: result.error });
+      }
     }
   };
 

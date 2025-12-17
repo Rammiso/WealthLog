@@ -7,6 +7,7 @@
 const UserRepository = require('./UserRepository');
 const TransactionRepository = require('./TransactionRepository');
 const CategoryRepository = require('./CategoryRepository');
+const GoalRepository = require('./GoalRepository');
 const { getModel, hasModel } = require('../database/models');
 
 class RepositoryFactory {
@@ -55,9 +56,11 @@ class RepositoryFactory {
         }
         return new CategoryRepository(getModel('Category'));
 
-      // Add more repositories as they are created
-      // case 'goal':
-      //   return new GoalRepository(getModel('Goal'));
+      case 'goal':
+        if (!hasModel('Goal')) {
+          throw new Error('Goal model not available. Please implement Goal model first.');
+        }
+        return new GoalRepository(getModel('Goal'));
 
       default:
         throw new Error(`Repository '${repositoryName}' not found`);
@@ -71,8 +74,8 @@ class RepositoryFactory {
     return [
       'user',
       'transaction',
-      'category'
-      // Add more as they become available
+      'category',
+      'goal'
     ];
   }
 
@@ -114,11 +117,13 @@ const repositoryFactory = new RepositoryFactory();
 const getUserRepository = () => repositoryFactory.getRepository('user');
 const getTransactionRepository = () => repositoryFactory.getRepository('transaction');
 const getCategoryRepository = () => repositoryFactory.getRepository('category');
+const getGoalRepository = () => repositoryFactory.getRepository('goal');
 
 module.exports = {
   RepositoryFactory,
   repositoryFactory,
   getUserRepository,
   getTransactionRepository,
-  getCategoryRepository
+  getCategoryRepository,
+  getGoalRepository
 };
