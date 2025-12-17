@@ -43,22 +43,36 @@ function Header() {
     >
       <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
         {/* Logo */}
-        <motion.div 
-          className="flex items-center gap-3 cursor-pointer group"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.2 }}
-        >
-          <div className="w-10 h-10 rounded-lg bg-neon-gradient flex items-center justify-center shadow-neon-cyan group-hover:shadow-neon-cyan-lg transition-all duration-300 relative overflow-hidden">
-            <span className="text-dark-primary font-bold text-xl font-mono relative z-10">W</span>
-            <div className="absolute inset-0 bg-gradient-to-br from-neon-green/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          </div>
-          <div>
-            <h1 className="text-xl font-bold font-secondary bg-neon-gradient bg-clip-text text-transparent">
-              WealthLog
-            </h1>
-            <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">Financial Intelligence</p>
-          </div>
-        </motion.div>
+        <NavLink to="/">
+          <motion.div 
+            className="flex items-center gap-3 cursor-pointer group"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="relative w-12 h-12 rounded-xl overflow-hidden transition-all duration-300">
+              <img 
+                src="/Logo_Small.png" 
+                alt="WealthLog Logo" 
+                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+              />
+              {/* Neon glow overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-neon-green/30 to-neon-cyan/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 mix-blend-screen"></div>
+              {/* Animated pulsing border */}
+              <div className="absolute inset-0 border-2 border-neon-green/0 group-hover:border-neon-green/60 rounded-xl transition-all duration-300 group-hover:animate-pulse"></div>
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-neon-cyan/0 group-hover:border-neon-cyan/80 transition-all duration-300"></div>
+              <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-neon-cyan/0 group-hover:border-neon-cyan/80 transition-all duration-300"></div>
+              <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-neon-cyan/0 group-hover:border-neon-cyan/80 transition-all duration-300"></div>
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-neon-cyan/0 group-hover:border-neon-cyan/80 transition-all duration-300"></div>
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold font-secondary text-neon-green drop-shadow-[0_0_10px_rgba(57,255,20,0.5)] group-hover:drop-shadow-[0_0_15px_rgba(57,255,20,0.7)] transition-all duration-300">
+                WealthLog
+              </h1>
+              <p className="text-[10px] text-gray-500 font-mono uppercase tracking-widest">Financial Intelligence</p>
+            </div>
+          </motion.div>
+        </NavLink>
 
         {/* Mobile Menu Button */}
         <button

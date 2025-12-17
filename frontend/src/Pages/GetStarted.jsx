@@ -215,8 +215,16 @@ export default function GetStarted() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="w-14 h-14 rounded-xl bg-neon-gradient flex items-center justify-center shadow-neon-cyan">
-              <span className="text-dark-primary font-bold text-3xl font-mono">W</span>
+            <div className="relative w-20 h-20 rounded-xl overflow-hidden">
+              <img 
+                src="/Logo_Small.png" 
+                alt="WealthLog Logo" 
+                className="w-full h-full object-contain"
+              />
+              {/* Subtle static glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-neon-green/10 to-neon-cyan/10 mix-blend-screen"></div>
+              {/* Border with neon-green */}
+              <div className="absolute inset-0 border-2 border-neon-green/40 rounded-xl"></div>
             </div>
           </motion.div>
 

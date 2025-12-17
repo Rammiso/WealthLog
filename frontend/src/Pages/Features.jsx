@@ -62,24 +62,115 @@ export default function Features() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               variants={fadeUp}
             >
-              <Card className="h-full p-6 hover:border-neon-green/30 transition-all duration-300 group backdrop-blur-xl">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-lg bg-neon-green/10 border border-neon-green/20 group-hover:bg-neon-green/20 group-hover:shadow-lg group-hover:shadow-neon-green/20 transition-all">
-                    <feature.icon className="w-6 h-6 text-neon-green" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-100 mb-2 group-hover:text-neon-green transition-colors">
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm text-gray-400 leading-relaxed mb-3">
-                      {feature.desc}
-                    </p>
-                    <div className="flex items-center gap-2 text-xs font-mono text-neon-green/70 uppercase tracking-wider">
-                      <span>{feature.metric}</span>
+              <motion.div
+                className="h-full relative group cursor-pointer"
+                whileHover={{ 
+                  y: -8,
+                  rotateX: 5,
+                  rotateY: 2,
+                  scale: 1.02
+                }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 300, 
+                  damping: 20 
+                }}
+              >
+                <div className="h-full p-6 rounded-xl backdrop-blur-xl bg-gradient-to-br from-dark-secondary/80 via-dark-primary/60 to-dark-secondary/80 border border-neon-green/20 group-hover:border-neon-cyan/60 transition-all duration-500 relative overflow-hidden shadow-lg shadow-dark-primary/50 group-hover:shadow-2xl group-hover:shadow-neon-green/20">
+                  
+                  {/* Multi-layer background effects */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-neon-green/5 via-transparent to-neon-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Animated light sweep */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-neon-cyan/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></div>
+                  
+                  {/* Corner accent lines */}
+                  <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-neon-green/0 group-hover:border-neon-green/80 transition-all duration-300"></div>
+                  <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-neon-cyan/0 group-hover:border-neon-cyan/80 transition-all duration-300"></div>
+                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-neon-cyan/0 group-hover:border-neon-cyan/80 transition-all duration-300"></div>
+                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-neon-green/0 group-hover:border-neon-green/80 transition-all duration-300"></div>
+                  
+                  {/* Grid pattern overlay */}
+                  <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  {/* Inner glow */}
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-neon-green/0 via-transparent to-neon-cyan/0 group-hover:from-neon-green/10 group-hover:to-neon-cyan/10 transition-all duration-500"></div>
+                  
+                  <div className="relative z-10 h-full flex flex-col">
+                    {/* Icon section */}
+                    <div className="mb-4">
+                      <motion.div 
+                        className="inline-flex p-4 rounded-xl bg-gradient-to-br from-neon-green/10 to-neon-cyan/10 border border-neon-green/30 group-hover:border-neon-cyan/50 group-hover:shadow-lg group-hover:shadow-neon-green/30 transition-all duration-300"
+                        whileHover={{ 
+                          rotate: [0, -5, 5, 0],
+                          scale: 1.1,
+                        }}
+                        transition={{ 
+                          duration: 0.6,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        <feature.icon className="w-7 h-7 text-neon-green group-hover:text-neon-cyan transition-colors duration-300" />
+                        
+                        {/* Icon glow effect */}
+                        <div className="absolute inset-0 rounded-xl bg-neon-green/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </motion.div>
+                    </div>
+                    
+                    {/* Content section */}
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="text-xl font-bold text-gray-100 mb-3 group-hover:text-neon-green transition-colors duration-300 font-secondary tracking-tight">
+                        {feature.title}
+                      </h3>
+                      
+                      <p className="text-sm text-gray-400 leading-relaxed mb-4 flex-1 group-hover:text-gray-300 transition-colors duration-300">
+                        {feature.desc}
+                      </p>
+                      
+                      {/* Status indicator */}
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-700/50 group-hover:border-neon-green/30 transition-colors duration-300">
+                        <div className="flex items-center gap-2">
+                          <motion.div 
+                            className="w-2 h-2 rounded-full bg-neon-green"
+                            animate={{ 
+                              scale: [1, 1.2, 1],
+                              opacity: [0.7, 1, 0.7]
+                            }}
+                            transition={{ 
+                              duration: 2, 
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
+                          ></motion.div>
+                          <span className="text-xs font-mono text-neon-green/80 uppercase tracking-wider group-hover:text-neon-green transition-colors duration-300">
+                            {feature.metric}
+                          </span>
+                        </div>
+                        
+                        {/* Data visualization element */}
+                        <div className="flex items-center gap-1">
+                          {[...Array(4)].map((_, idx) => (
+                            <motion.div
+                              key={idx}
+                              className="w-1 bg-neon-cyan/40 rounded-full group-hover:bg-neon-cyan transition-colors duration-300"
+                              style={{ height: `${8 + idx * 3}px` }}
+                              animate={{
+                                height: [`${8 + idx * 3}px`, `${12 + idx * 4}px`, `${8 + idx * 3}px`]
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: idx * 0.2,
+                                ease: "easeInOut"
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </Card>
+              </motion.div>
             </motion.div>
           ))}
         </div>

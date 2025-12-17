@@ -88,35 +88,135 @@ export default function Login() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        {/* Image Section */}
+        {/* Image Section - Futuristic Visualization */}
         <motion.div 
           className="hidden lg:block relative"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-neon-cyan/30 shadow-2xl shadow-neon-cyan/10 backdrop-blur-sm">
-            <img
-              src={loginImage}
-              alt="Financial intelligence platform"
-              className="w-full h-[600px] object-cover"
-            />
+          <div className="relative overflow-hidden rounded-2xl border border-neon-cyan/30 shadow-2xl shadow-neon-cyan/10 backdrop-blur-sm h-[600px] bg-gradient-to-br from-dark-primary via-dark-secondary to-dark-primary">
+            {/* Animated Background */}
+            <div className="absolute inset-0">
+              {/* Grid Pattern */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(0,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.1)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+              
+              {/* Animated Gradient Orbs */}
+              <motion.div 
+                className="absolute top-20 right-20 w-64 h-64 bg-neon-cyan/20 rounded-full blur-3xl"
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{ duration: 4, repeat: Infinity }}
+              ></motion.div>
+              <motion.div 
+                className="absolute bottom-20 left-20 w-64 h-64 bg-neon-green/20 rounded-full blur-3xl"
+                animate={{ 
+                  scale: [1, 1.3, 1],
+                  opacity: [0.3, 0.5, 0.3]
+                }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+              ></motion.div>
+              
+              {/* Data Streams */}
+              <div className="absolute inset-0 overflow-hidden">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute h-[1px] bg-gradient-to-r from-transparent via-neon-cyan to-transparent"
+                    style={{
+                      top: `${20 + i * 15}%`,
+                      left: '-100%',
+                      width: '100%'
+                    }}
+                    animate={{
+                      left: ['100%', '-100%']
+                    }}
+                    transition={{
+                      duration: 3 + i,
+                      repeat: Infinity,
+                      delay: i * 0.5
+                    }}
+                  />
+                ))}
+              </div>
+              
+              {/* Floating Data Points */}
+              {[...Array(8)].map((_, i) => (
+                <motion.div
+                  key={`dot-${i}`}
+                  className="absolute w-2 h-2 rounded-full bg-neon-cyan/50"
+                  style={{
+                    left: `${10 + i * 12}%`,
+                    top: `${30 + (i % 3) * 20}%`
+                  }}
+                  animate={{
+                    y: [0, -20, 0],
+                    opacity: [0.3, 1, 0.3]
+                  }}
+                  transition={{
+                    duration: 2 + i * 0.3,
+                    repeat: Infinity,
+                    delay: i * 0.2
+                  }}
+                />
+              ))}
+              
+              {/* Holographic Chart Lines */}
+              <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 400 600">
+                <motion.path
+                  d="M 50 400 Q 100 300, 150 350 T 250 300 T 350 350"
+                  stroke="url(#gradient1)"
+                  strokeWidth="2"
+                  fill="none"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                />
+                <motion.path
+                  d="M 50 450 Q 100 380, 150 420 T 250 380 T 350 420"
+                  stroke="url(#gradient2)"
+                  strokeWidth="2"
+                  fill="none"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2.5, repeat: Infinity, repeatType: "reverse", delay: 0.5 }}
+                />
+                <defs>
+                  <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#00ffff" stopOpacity="0" />
+                    <stop offset="50%" stopColor="#00ffff" stopOpacity="1" />
+                    <stop offset="100%" stopColor="#00ffff" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#39ff14" stopOpacity="0" />
+                    <stop offset="50%" stopColor="#39ff14" stopOpacity="1" />
+                    <stop offset="100%" stopColor="#39ff14" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            
+            {/* Overlay Gradients */}
             <div className="absolute inset-0 bg-gradient-to-t from-dark-primary via-dark-primary/50 to-transparent"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan/10 to-neon-green/10 mix-blend-overlay"></div>
-            <div className="absolute bottom-8 left-8 right-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan/5 to-neon-green/5 mix-blend-overlay"></div>
+            
+            {/* Content */}
+            <div className="absolute bottom-8 left-8 right-8 z-10">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-green/10 border border-neon-green/20 mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-neon-green/10 border border-neon-green/20 mb-4 backdrop-blur-sm">
                   <Shield className="w-4 h-4 text-neon-green" />
                   <span className="text-xs font-mono text-neon-green uppercase tracking-wider">Secure Access</span>
                 </div>
-                <h3 className="text-3xl font-bold text-white mb-2 font-secondary">
+                <h3 className="text-3xl font-bold text-white mb-2 font-secondary drop-shadow-[0_0_10px_rgba(0,255,255,0.3)]">
                   Access Your Financial
                   <br />
-                  <span className="text-neon-green">Command Center</span>
+                  <span className="text-neon-green drop-shadow-[0_0_10px_rgba(57,255,20,0.5)]">Command Center</span>
                 </h3>
                 <p className="text-gray-300 font-mono text-sm">
                   Real-time analytics • Portfolio management • Growth insights
@@ -140,8 +240,16 @@ export default function Login() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                <div className="w-12 h-12 rounded-xl bg-neon-gradient flex items-center justify-center shadow-neon-cyan">
-                  <span className="text-dark-primary font-bold text-2xl font-mono">W</span>
+                <div className="relative w-20 h-20 rounded-xl overflow-hidden">
+                  <img 
+                    src="/Logo_Small.png" 
+                    alt="WealthLog Logo" 
+                    className="w-full h-full object-contain"
+                  />
+                  {/* Subtle static glow */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-neon-green/10 to-neon-cyan/10 mix-blend-screen"></div>
+                  {/* Border with neon-green */}
+                  <div className="absolute inset-0 border-2 border-neon-green/40 rounded-xl"></div>
                 </div>
               </motion.div>
               <motion.h1 
