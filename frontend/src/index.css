@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.5);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes slideDown {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@layer base {
+  html,
+  body {
+    @apply bg-dark-primary text-gray-100 font-primary antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen;
+    background: linear-gradient(to bottom, #0a0a0a, #1a1a1a);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full;
+    background-color: rgba(0, 255, 255, 0.5); /* neon-cyan/50 */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 255, 255, 0.7); /* neon-cyan/70 */
+  }
+}
+
+@layer components {
+  /* Glass morphism utility */
+  .glass {
+    @apply bg-glass-dark backdrop-blur-lg border border-white/10;
+  }
+
+  /* Neon text glow */
+  .text-neon-glow {
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+  }
+
+  /* Brand text with gradient and fallback */
+  .text-brand {
+    background: linear-gradient(135deg, #00ffff, #00d4ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #00ffff; /* Fallback color */
+  }
+
+  /* Ensure brand text is visible on all browsers */
+  @supports not (-webkit-background-clip: text) {
+    .text-brand {
+      color: #00ffff;
+    }
+  }
+
+  /* Button hover glow effect */
+  .btn-glow {
+    @apply transition-all duration-300 ease-in-out;
+  }
+
+  .btn-glow:hover {
+    @apply shadow-neon-cyan-lg;
+  }
+}
+
+@layer utilities {
+  /* Custom gradient backgrounds */
+  .bg-neon-gradient {
+    background: linear-gradient(135deg, #00ffff, #00d4ff);
+  }
+
+  .bg-neon-gradient-magenta {
+    background: linear-gradient(135deg, #ff00ff, #bd00ff);
+  }
+
+  .bg-dark-gradient {
+    background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
+  }
+
+  /* Border glow utilities */
+  .border-glow {
+    @apply border shadow-neon-cyan;
+    border-color: rgba(0, 255, 255, 0.5); /* border-neon-cyan/50 */
+  }
+
+  .border-glow-hover:hover {
+    @apply border-neon-cyan shadow-neon-cyan-lg;
+  }
+
+  /* Dynamic color utilities for charts and components */
+  .text-neon-green { color: #39ff14; }
+  .text-yellow-400 { color: #facc15; }
+  .bg-neon-green { background-color: #39ff14; }
+  .bg-yellow-400 { background-color: #facc15; }
+  .border-neon-green { border-color: #39ff14; }
+  .border-yellow-400 { border-color: #facc15; }
+  
+  /* Additional color utilities */
+  .bg-neon-green\/10 { background-color: rgba(57, 255, 20, 0.1); }
+  .bg-neon-magenta\/10 { background-color: rgba(255, 0, 255, 0.1); }
+  .bg-neon-cyan\/10 { background-color: rgba(0, 255, 255, 0.1); }
+  .bg-neon-blue\/10 { background-color: rgba(0, 212, 255, 0.1); }
+  
+  .border-neon-green\/20 { border-color: rgba(57, 255, 20, 0.2); }
+  .border-neon-green\/30 { border-color: rgba(57, 255, 20, 0.3); }
+  .border-neon-green\/40 { border-color: rgba(57, 255, 20, 0.4); }
+  .border-neon-magenta\/20 { border-color: rgba(255, 0, 255, 0.2); }
+  .border-neon-cyan\/20 { border-color: rgba(0, 255, 255, 0.2); }
+  .border-neon-cyan\/30 { border-color: rgba(0, 255, 255, 0.3); }
+  .border-neon-cyan\/40 { border-color: rgba(0, 255, 255, 0.4); }
+  .border-neon-blue\/20 { border-color: rgba(0, 212, 255, 0.2); }
+  .border-neon-blue\/40 { border-color: rgba(0, 212, 255, 0.4); }
+
+  /* Shadow utilities for neon effects */
+  .shadow-neon-green\/20 { box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); }
+  .shadow-neon-cyan\/20 { box-shadow: 0 0 20px rgba(0, 255, 255, 0.2); }
+  
+  /* Text shadow for glowing text */
+  .text-glow-green { text-shadow: 0 0 10px rgba(57, 255, 20, 0.5); }
+  .text-glow-cyan { text-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+}
