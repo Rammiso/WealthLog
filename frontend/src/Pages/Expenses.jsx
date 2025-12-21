@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Plus, TrendingDown, Calendar, Search, Filter, PieChart } from 'lucide-react';
 import { useApp } from '../Context/AppContext';
 import TransactionForm from '../Components/Dashboard/TransactionForm';
+import useDashboardData from '../hooks/useDashboardData';
 
 export default function Expenses() {
   const [showTransactionForm, setShowTransactionForm] = useState(false);
@@ -10,6 +11,7 @@ export default function Expenses() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const { transactions, categories, loadTransactions, loadCategories, loadingStates } = useApp();
+  const { loadAllData } = useDashboardData();
 
   useEffect(() => {
     loadTransactions(); // Load all transactions, filter locally
@@ -23,6 +25,17 @@ export default function Expenses() {
   const expenseTransactions = safeTransactions.filter(t => t.type === 'expense');
   const totalExpenses = expenseTransactions.reduce((sum, t) => sum + t.amount, 0);
   const expenseCategories = safeCategories.filter(c => c.type === 'expense');
+
+  // Apply filters
+  const filteredExpenses = expenseTransactions.filter(transaction => {
+    const matchesSearch = searchTerm === '' || 
+      transaction.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.categoryName?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = selectedCategory === '' || transaction.categoryId === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   // Show loading state
   if (loadingStates?.transactions) {
@@ -190,10 +203,12 @@ export default function Expenses() {
           <h2 className="text-xl font-semibold text-white">Recent Expenses</h2>
         </div>
         <div className="divide-y divide-gray-700/50">
-          {expenseTransactions.length === 0 ? (
+          {filteredExpenses.length === 0 ? (
             <div className="p-8 text-center">
               <TrendingDown className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-400 mb-4">No expense transactions yet</p>
+              <p className="text-gray-400 mb-4">
+                {expenseTransactions.length === 0 ? "No expense transactions yet" : "No expenses match your filters"}
+              </p>
               <button
                 onClick={() => setShowTransactionForm(true)}
                 className="px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors"
@@ -202,7 +217,7 @@ export default function Expenses() {
               </button>
             </div>
           ) : (
-            expenseTransactions.slice(0, 10).map((transaction) => (
+            filteredExpenses.slice(0, 10).map((transaction) => (
               <div key={transaction.id} className="p-4 hover:bg-white/5 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -232,6 +247,9 @@ export default function Expenses() {
         onSuccess={() => {
           setShowTransactionForm(false);
           loadTransactions(); // Reload all transactions
+        }}
+        onTransactionCreated={() => {
+          loadAllData(); // Refresh dashboard data
         }}
         defaultType="expense"
       />

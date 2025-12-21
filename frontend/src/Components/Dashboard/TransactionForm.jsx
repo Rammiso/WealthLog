@@ -6,7 +6,7 @@ import Input from '../ui/Input';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 
-export default function TransactionForm({ isOpen, onClose, transaction = null, onSuccess, defaultType = 'expense' }) {
+export default function TransactionForm({ isOpen, onClose, transaction = null, onSuccess, defaultType = 'expense', onTransactionCreated }) {
   const [formData, setFormData] = useState({
     amount: '',
     description: '',
@@ -119,6 +119,7 @@ export default function TransactionForm({ isOpen, onClose, transaction = null, o
       
       if (result.success) {
         onSuccess && onSuccess(result.data);
+        onTransactionCreated && onTransactionCreated(); // Refresh dashboard data
         onClose();
       }
     }

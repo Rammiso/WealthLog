@@ -78,6 +78,17 @@ app.use((req, res, next) => {
 // API routes
 app.use(`${config.API_PREFIX}/${config.API_VERSION}`, routes);
 
+// Health check endpoint
+app.get('/api/v1/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: config.NODE_ENV,
+    version: '1.0.0'
+  });
+});
+
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({

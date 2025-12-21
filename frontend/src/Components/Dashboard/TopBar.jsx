@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import TransactionForm from "./TransactionForm";
 
-const TopBar = memo(function TopBar({ currentPath = "/dashboard" }) {
+const TopBar = memo(function TopBar({ currentPath = "/dashboard", onTransactionCreated }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
@@ -213,9 +213,9 @@ const TopBar = memo(function TopBar({ currentPath = "/dashboard" }) {
         isOpen={showTransactionForm}
         onClose={() => setShowTransactionForm(false)}
         onSuccess={() => {
-          // Refresh dashboard data
-          window.location.reload(); // Simple refresh for now
+          setShowTransactionForm(false);
         }}
+        onTransactionCreated={onTransactionCreated}
       />
     </>
   );

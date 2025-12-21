@@ -1,7 +1,8 @@
 {
-  "name": "my-react-app",
+  "name": "wealthlog-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "WealthLog Frontend - Modern personal finance management interface",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +10,18 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "keywords": [
+    "fintech",
+    "financial",
+    "wealth",
+    "money",
+    "frontend",
+    "react",
+    "vite",
+    "tailwindcss"
+  ],
+  "author": "Musab Hassen",
+  "license": "MIT",
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.17.5",
     "framer-motion": "^12.23.24",
@@ -34,5 +47,17 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
     "vite": "^7.1.7"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/wealthlog"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/wealthlog/issues"
+  },
+  "homepage": "https://github.com/your-username/wealthlog#readme"
 }

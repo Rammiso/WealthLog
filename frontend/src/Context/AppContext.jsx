@@ -442,6 +442,32 @@ export function AppProvider({ children }) {
     }
   }, [addNotification]);
 
+  // Dashboard actions
+  const loadDashboardData = useCallback(async (params = {}) => {
+    dispatch({ type: APP_ACTIONS.LOAD_DASHBOARD_START });
+    try {
+      const response = await apiService.getDashboardOverview(params);
+      if (response.success) {
+        dispatch({
+          type: APP_ACTIONS.LOAD_DASHBOARD_SUCCESS,
+          payload: { dashboardData: response.data },
+        });
+      } else {
+        throw new Error(response.message || 'Failed to load dashboard data');
+      }
+    } catch (error) {
+      dispatch({
+        type: APP_ACTIONS.LOAD_DASHBOARD_FAILURE,
+        payload: { error: error.message },
+      });
+      addNotification({
+        type: 'error',
+        title: 'Error',
+        message: 'Failed to load dashboard data',
+      });
+    }
+  }, [addNotification]);
+
   // Transactions actions
   const loadTransactions = useCallback(async (params = {}) => {
     dispatch({ type: APP_ACTIONS.LOAD_TRANSACTIONS_START });
@@ -484,6 +510,10 @@ export function AppProvider({ children }) {
           title: 'Success',
           message: 'Transaction created successfully',
         });
+        
+        // Refresh dashboard data after creating transaction
+        loadDashboardData();
+        
         return { success: true, data: response.data };
       } else {
         throw new Error(response.message || 'Failed to create transaction');
@@ -496,7 +526,7 @@ export function AppProvider({ children }) {
       });
       return { success: false, error: error.message };
     }
-  }, [addNotification]);
+  }, [addNotification, loadDashboardData]);
 
   const updateTransaction = useCallback(async (id, transactionData) => {
     try {
@@ -511,6 +541,10 @@ export function AppProvider({ children }) {
           title: 'Success',
           message: 'Transaction updated successfully',
         });
+        
+        // Refresh dashboard data after updating transaction
+        loadDashboardData();
+        
         return { success: true, data: response.data };
       } else {
         throw new Error(response.message || 'Failed to update transaction');
@@ -523,7 +557,7 @@ export function AppProvider({ children }) {
       });
       return { success: false, error: error.message };
     }
-  }, [addNotification]);
+  }, [addNotification, loadDashboardData]);
 
   const deleteTransaction = useCallback(async (id) => {
     try {
@@ -538,6 +572,10 @@ export function AppProvider({ children }) {
           title: 'Success',
           message: 'Transaction deleted successfully',
         });
+        
+        // Refresh dashboard data after deleting transaction
+        loadDashboardData();
+        
         return { success: true };
       } else {
         throw new Error(response.message || 'Failed to delete transaction');
@@ -550,7 +588,7 @@ export function AppProvider({ children }) {
       });
       return { success: false, error: error.message };
     }
-  }, [addNotification]);
+  }, [addNotification, loadDashboardData]);
 
   // Goals actions
   const loadGoals = useCallback(async (params = {}) => {
@@ -659,32 +697,6 @@ export function AppProvider({ children }) {
         message: error.message || 'Failed to delete goal',
       });
       return { success: false, error: error.message };
-    }
-  }, [addNotification]);
-
-  // Dashboard actions
-  const loadDashboardData = useCallback(async (params = {}) => {
-    dispatch({ type: APP_ACTIONS.LOAD_DASHBOARD_START });
-    try {
-      const response = await apiService.getDashboardOverview(params);
-      if (response.success) {
-        dispatch({
-          type: APP_ACTIONS.LOAD_DASHBOARD_SUCCESS,
-          payload: { dashboardData: response.data },
-        });
-      } else {
-        throw new Error(response.message || 'Failed to load dashboard data');
-      }
-    } catch (error) {
-      dispatch({
-        type: APP_ACTIONS.LOAD_DASHBOARD_FAILURE,
-        payload: { error: error.message },
-      });
-      addNotification({
-        type: 'error',
-        title: 'Error',
-        message: 'Failed to load dashboard data',
-      });
     }
   }, [addNotification]);
 

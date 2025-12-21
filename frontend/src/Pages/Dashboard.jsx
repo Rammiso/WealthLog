@@ -62,7 +62,7 @@ const DashboardHome = ({ dashboardData, isLoading, refreshData, user }) => {
 
   // Transform dashboard data for components
   const transformedData = {
-    summary: dashboardData.stats ? {
+    summary: dashboardData?.stats ? {
       totalIncome: dashboardData.stats.currentMonth?.totalIncome || 0,
       totalExpenses: dashboardData.stats.currentMonth?.totalExpenses || 0,
       remainingBalance: dashboardData.stats.currentMonth?.netIncome || 0,
@@ -279,7 +279,14 @@ export default function Dashboard() {
         {/* Main Content */}
         <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
           {/* Top Bar */}
-          <TopBar currentPath={location.pathname} />
+          <TopBar 
+            currentPath={location.pathname} 
+            onTransactionCreated={() => {
+              // Refresh all dashboard data after transaction creation
+              loadAllData();
+              loadTransactions();
+            }}
+          />
 
           {/* Dashboard Content with Routing */}
           <Suspense fallback={<LoadingPage />}>
