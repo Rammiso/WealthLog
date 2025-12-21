@@ -4,7 +4,9 @@
 
 # Documentation (keep local)
 INTEGRATION_GUIDE.md
-
+DEPLOYMENT.md
+.kiro
+.vscode
 # Logs
 *.log
 npm-debug.log*
