@@ -1,5 +1,25 @@
-const { body, query, param } = require('express-validator');
-const { handleValidationErrors } = require('./index');
+const { body, query, param, validationResult } = require('express-validator');
+const ApiError = require('../../utils/ApiError');
+
+/**
+ * Handle validation errors middleware
+ * Processes express-validator results and throws ApiError if validation fails
+ */
+const handleValidationErrors = (req, res, next) => {
+  const errors = validationResult(req);
+  
+  if (!errors.isEmpty()) {
+    const errorMessages = errors.array().map(error => ({
+      field: error.path || error.param,
+      message: error.msg,
+      value: error.value
+    }));
+    
+    throw ApiError.validation('Validation failed', errorMessages);
+  }
+  
+  next();
+};
 
 /**
  * Goal Validation Rules

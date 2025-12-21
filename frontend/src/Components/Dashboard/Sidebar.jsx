@@ -7,21 +7,33 @@ import {
   Settings,
   Menu,
   X,
-  Wallet
+  Wallet,
+  User,
+  LogOut
 } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../../Context/AuthContext";
 
 const navigationItems = [
-  { icon: LayoutDashboard, label: "Dashboard", active: true },
-  { icon: TrendingUp, label: "Income", active: false },
-  { icon: TrendingDown, label: "Expenses", active: false },
-  { icon: PieChart, label: "Categories", active: false },
-  { icon: Target, label: "Goals", active: false },
-  { icon: Settings, label: "Settings", active: false }
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", active: true },
+  { icon: TrendingUp, label: "Income", path: "/dashboard/income", active: false },
+  { icon: TrendingDown, label: "Expenses", path: "/dashboard/expenses", active: false },
+  { icon: PieChart, label: "Categories", path: "/dashboard/categories", active: false },
+  { icon: Target, label: "Goals", path: "/dashboard/goals", active: false },
+  { icon: Settings, label: "Settings", path: "/dashboard/settings", active: false }
 ];
 
-export default function Sidebar({ collapsed, onToggle }) {
+export default function Sidebar({ collapsed, onToggle, currentPath = "/dashboard" }) {
   const [hoveredItem, setHoveredItem] = useState(null);
+  const { user, logout } = useAuth();
+
+  const handleNavigation = (path) => {
+    window.location.href = path;
+  };
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <>
@@ -54,49 +66,78 @@ export default function Sidebar({ collapsed, onToggle }) {
 
         {/* Navigation */}
         <nav className="p-4 space-y-2">
-          {navigationItems.map((item) => (
-            <div
-              key={item.label}
-              onMouseEnter={() => setHoveredItem(item.label)}
-              onMouseLeave={() => setHoveredItem(null)}
-            >
-              <button
-                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group relative ${
-                  item.active
-                    ? 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/30'
-                    : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
-                }`}
+          {navigationItems.map((item) => {
+            const isActive = currentPath === item.path || (item.path === "/dashboard" && currentPath === "/dashboard");
+            return (
+              <div
+                key={item.label}
+                onMouseEnter={() => setHoveredItem(item.label)}
+                onMouseLeave={() => setHoveredItem(null)}
               >
-                <item.icon 
-                  size={20} 
-                  className={`transition-colors ${
-                    item.active ? 'text-neon-cyan' : 'group-hover:text-neon-cyan'
-                  }`} 
-                />
-                
-                {!collapsed && (
-                  <span className="font-medium">{item.label}</span>
-                )}
+                <button
+                  onClick={() => handleNavigation(item.path)}
+                  className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200 group relative ${
+                    isActive
+                      ? 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/30'
+                      : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+                  }`}
+                >
+                  <item.icon 
+                    size={20} 
+                    className={`transition-colors ${
+                      isActive ? 'text-neon-cyan' : 'group-hover:text-neon-cyan'
+                    }`} 
+                  />
+                  
+                  {!collapsed && (
+                    <span className="font-medium">{item.label}</span>
+                  )}
 
-                {/* Active indicator */}
-                {item.active && (
-                  <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-neon-cyan rounded-l-full" />
-                )}
+                  {/* Active indicator */}
+                  {isActive && (
+                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-neon-cyan rounded-l-full" />
+                  )}
 
-                {/* Tooltip for collapsed state */}
-                {collapsed && hoveredItem === item.label && (
-                  <div className="absolute left-full ml-2 px-2 py-1 bg-dark-primary border border-neon-cyan/30 rounded text-sm whitespace-nowrap z-50">
-                    {item.label}
-                  </div>
-                )}
-              </button>
-            </div>
-          ))}
+                  {/* Tooltip for collapsed state */}
+                  {collapsed && hoveredItem === item.label && (
+                    <div className="absolute left-full ml-2 px-2 py-1 bg-dark-primary border border-neon-cyan/30 rounded text-sm whitespace-nowrap z-50">
+                      {item.label}
+                    </div>
+                  )}
+                </button>
+              </div>
+            );
+          })}
         </nav>
 
         {/* Bottom Section */}
         {!collapsed && (
-          <div className="absolute bottom-4 left-4 right-4">
+          <div className="absolute bottom-4 left-4 right-4 space-y-3">
+            {/* User Profile Section */}
+            <div className="glass p-3 rounded-lg border border-neon-cyan/20">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-neon-gradient rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-dark-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-200 truncate">
+                    {user?.fullName || `${user?.firstName} ${user?.lastName}` || 'User'}
+                  </p>
+                  <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+                </div>
+              </div>
+              
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="w-full mt-3 flex items-center justify-center gap-2 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-all duration-300 text-sm"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </button>
+            </div>
+            
+            {/* Monthly Goal */}
             <div className="glass p-4 rounded-lg border border-neon-cyan/20">
               <div className="text-center">
                 <div className="w-12 h-12 bg-neon-gradient rounded-full mx-auto mb-2 flex items-center justify-center">

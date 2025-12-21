@@ -131,7 +131,7 @@ export function AuthProvider({ children }) {
           type: AUTH_ACTIONS.LOGIN_SUCCESS,
           payload: {
             user: response.data.user,
-            token: response.data.token,
+            token: response.data.tokens.accessToken,
           },
         });
         return { success: true, data: response.data };
@@ -158,7 +158,7 @@ export function AuthProvider({ children }) {
           type: AUTH_ACTIONS.REGISTER_SUCCESS,
           payload: {
             user: response.data.user,
-            token: response.data.token,
+            token: response.data.tokens.accessToken,
           },
         });
         return { success: true, data: response.data };

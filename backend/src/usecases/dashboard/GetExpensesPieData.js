@@ -102,6 +102,11 @@ class GetExpensesPieData {
   createCategoryMap(categories) {
     const map = new Map();
     
+    // Handle case where categories might be undefined or empty
+    if (!categories || !Array.isArray(categories)) {
+      return map;
+    }
+    
     categories.forEach(category => {
       map.set(category.name, {
         id: category.id,

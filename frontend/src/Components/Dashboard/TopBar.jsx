@@ -134,7 +134,9 @@ const TopBar = memo(function TopBar() {
                   <User size={16} className="text-dark-primary" />
                 </div>
                 <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium text-gray-200">John Doe</p>
+                  <p className="text-sm font-medium text-gray-200">
+                    {user?.fullName || `${user?.firstName} ${user?.lastName}` || 'User'}
+                  </p>
                   <p className="text-xs text-gray-500">Premium User</p>
                 </div>
                 <ChevronDown size={16} className="text-gray-400" />
@@ -144,17 +146,26 @@ const TopBar = memo(function TopBar() {
               {showProfile && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-dark-secondary border border-gray-700 rounded-lg shadow-2xl z-50">
                   <div className="p-2">
-                    <button className="w-full text-left p-2 rounded hover:bg-white/5 transition-colors text-gray-200 text-sm">
+                    <button 
+                      onClick={() => window.location.href = '/dashboard/profile'}
+                      className="w-full text-left p-2 rounded hover:bg-white/5 transition-colors text-gray-200 text-sm"
+                    >
                       Profile Settings
                     </button>
-                    <button className="w-full text-left p-2 rounded hover:bg-white/5 transition-colors text-gray-200 text-sm">
+                    <button 
+                      onClick={() => window.location.href = '/dashboard/settings'}
+                      className="w-full text-left p-2 rounded hover:bg-white/5 transition-colors text-gray-200 text-sm"
+                    >
                       Account Preferences
                     </button>
                     <button className="w-full text-left p-2 rounded hover:bg-white/5 transition-colors text-gray-200 text-sm">
                       Help & Support
                     </button>
                     <hr className="my-2 border-gray-700" />
-                    <button className="w-full text-left p-2 rounded hover:bg-red-500/10 transition-colors text-red-400 text-sm">
+                    <button 
+                      onClick={logout}
+                      className="w-full text-left p-2 rounded hover:bg-red-500/10 transition-colors text-red-400 text-sm"
+                    >
                       Sign Out
                     </button>
                   </div>

@@ -15,10 +15,28 @@ class CategoryRepository extends BaseRepository {
   /**
    * Find categories by user (includes default categories)
    */
-  async findByUser(userId, type = null) {
+  async findByUser(userId, options = {}) {
     try {
+      // Handle both string and object formats
+      let type = null;
+      if (typeof options === 'string') {
+        type = options;
+      } else if (options && options.type) {
+        type = options.type;
+      }
+      
       const categories = await this.model.findByUser(userId, type);
-      return categories;
+      
+      // Return in consistent format with pagination structure
+      return {
+        data: categories,
+        pagination: {
+          total: categories.length,
+          page: 1,
+          limit: categories.length,
+          totalPages: 1
+        }
+      };
     } catch (error) {
       logger.error('Error finding categories by user:', error);
       throw ApiError.internal('Failed to retrieve categories');

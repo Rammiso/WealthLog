@@ -1,4 +1,5 @@
 import { useState, Suspense, lazy, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import ErrorBoundary from "../Components/ErrorBoundary";
 import Sidebar from "../Components/Dashboard/Sidebar";
 import TopBar from "../Components/Dashboard/TopBar";
@@ -14,6 +15,14 @@ const SimpleCategoryChart = lazy(() => import("../Components/Dashboard/SimpleCat
 const RecentTransactions = lazy(() => import("../Components/Dashboard/RecentTransactions"));
 const GoalsProgress = lazy(() => import("../Components/Dashboard/GoalsProgress"));
 
+// Lazy load page components
+const Income = lazy(() => import("./Income"));
+const Expenses = lazy(() => import("./Expenses"));
+const Categories = lazy(() => import("./Categories"));
+const Goals = lazy(() => import("./Goals"));
+const Settings = lazy(() => import("./Settings"));
+const Profile = lazy(() => import("./Profile"));
+
 // Loading component
 const LoadingCard = () => (
   <div className="glass p-6 rounded-xl border border-gray-700/50 animate-pulse">
@@ -22,6 +31,128 @@ const LoadingCard = () => (
     <div className="h-32 bg-gray-700 rounded"></div>
   </div>
 );
+
+const LoadingPage = () => (
+  <div className="p-4 lg:p-6 space-y-6">
+    <div className="h-8 bg-gray-700 rounded w-1/4 mb-4"></div>
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      {Array(4).fill(0).map((_, i) => <LoadingCard key={i} />)}
+    </div>
+  </div>
+);
+
+// Dashboard Home Component
+const DashboardHome = ({ dashboardData, isLoading, refreshData, user }) => {
+  // Transform dashboard data for components
+  const transformedData = {
+    summary: dashboardData.stats ? {
+      totalIncome: dashboardData.stats.currentMonth?.totalIncome || 0,
+      totalExpenses: dashboardData.stats.currentMonth?.totalExpenses || 0,
+      remainingBalance: dashboardData.stats.currentMonth?.netIncome || 0,
+      activeGoals: dashboardData.stats.goals?.active || 0,
+      currency: user?.currency || "ETB"
+    } : {
+      totalIncome: 0,
+      totalExpenses: 0,
+      remainingBalance: 0,
+      activeGoals: 0,
+      currency: "ETB"
+    },
+    
+    monthlyData: dashboardData.incomeLine?.data || [],
+    
+    expenseCategories: dashboardData.expensesPie?.data || [],
+    
+    categorySpending: dashboardData.categoryBar?.data?.map(item => ({
+      category: item.name,
+      amount: item.value,
+      budget: item.value * 1.2, // Mock budget as 120% of current spending
+      type: item.type
+    })) || [],
+    
+    recentTransactions: [], // Will be loaded separately
+    
+    goals: dashboardData.goalsProgress?.data?.map(goal => ({
+      id: goal.id,
+      title: goal.title,
+      target: goal.targetAmount,
+      current: goal.currentAmount,
+      deadline: goal.endDate,
+      progress: goal.progressPercentage
+    })) || []
+  };
+
+  return (
+    <main className="p-4 lg:p-6 space-y-6">
+      {/* Summary Cards */}
+      <ErrorBoundary>
+        <Suspense fallback={<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">{Array(4).fill(0).map((_, i) => <LoadingCard key={i} />)}</div>}>
+          <SummaryCards data={transformedData.summary} isLoading={isLoading} />
+        </Suspense>
+      </ErrorBoundary>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Income vs Expenses Chart */}
+        <div className="xl:col-span-2">
+          <ErrorBoundary>
+            <Suspense fallback={<LoadingCard />}>
+              <SimpleIncomeChart 
+                data={transformedData.monthlyData} 
+                isLoading={isLoading}
+                onRefresh={() => refreshData('incomeLine', 6)}
+              />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
+
+        {/* Expense Distribution */}
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingCard />}>
+            <SimpleExpenseChart 
+              data={transformedData.expenseCategories} 
+              isLoading={isLoading}
+              onRefresh={() => refreshData('expensesPie')}
+            />
+          </Suspense>
+        </ErrorBoundary>
+
+        {/* Category Spending */}
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingCard />}>
+            <SimpleCategoryChart 
+              data={transformedData.categorySpending} 
+              isLoading={isLoading}
+              onRefresh={() => refreshData('categoryBar')}
+            />
+          </Suspense>
+        </ErrorBoundary>
+
+        {/* Goals Progress */}
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingCard />}>
+            <GoalsProgress 
+              data={transformedData.goals} 
+              isLoading={isLoading}
+              onRefresh={() => refreshData('goalsProgress')}
+            />
+          </Suspense>
+        </ErrorBoundary>
+
+        {/* Recent Transactions */}
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingCard />}>
+            <RecentTransactions 
+              data={transformedData.recentTransactions} 
+              isLoading={isLoading}
+              onRefresh={() => refreshData('stats')}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </div>
+    </main>
+  );
+};
 
 export default function Dashboard() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);

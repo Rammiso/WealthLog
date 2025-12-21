@@ -42,15 +42,12 @@ class RegisterUser {
         throw ApiError.conflict('Email address is already registered');
       }
 
-      // Hash password
-      const hashedPassword = await passwordService.hashPassword(password);
-
-      // Prepare user data for database
+      // Prepare user data for database (password will be hashed by User model pre-save middleware)
       const userData = {
         firstName: userEntity.firstName,
         lastName: userEntity.lastName,
         email: userEntity.email,
-        password: hashedPassword,
+        password: password, // Raw password - will be hashed by User model
         currency: userEntity.currency,
         isActive: true,
         authProvider: 'local'

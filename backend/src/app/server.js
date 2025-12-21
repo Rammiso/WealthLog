@@ -68,7 +68,8 @@ app.use((req, res, next) => {
   
   res.on('finish', () => {
     const duration = Date.now() - start;
-    res.setHeader('X-Response-Time', duration);
+    // res.setHeader('X-Response-Time', duration);
+    console.log(`Response time: ${duration}ms`);
   });
   
   next();

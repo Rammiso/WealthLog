@@ -42,13 +42,7 @@ const categorySchemaDefinition = {
   icon: {
     type: String,
     trim: true,
-    validate: {
-      validator: function(icon) {
-        if (!icon) return true; // Optional field
-        return /^[a-zA-Z0-9_-]+$/.test(icon);
-      },
-      message: 'Icon must contain only letters, numbers, hyphens, and underscores'
-    },
+    maxlength: [50, 'Icon cannot exceed 50 characters'],
     default: 'folder'
   },
 

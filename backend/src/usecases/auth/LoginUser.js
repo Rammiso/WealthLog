@@ -22,7 +22,8 @@ class LoginUser {
       const user = await this.findUserForAuthentication(email);
 
       // Verify password
-      const isPasswordValid = await passwordService.comparePassword(password, user.password);
+      const isPasswordValid = await user.comparePassword(password);
+      
       if (!isPasswordValid) {
         // Log failed login attempt
         logger.warn('Failed login attempt', { 

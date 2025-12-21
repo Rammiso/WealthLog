@@ -128,16 +128,16 @@ class ApiService {
   // Authentication API
   async login(email, password) {
     const response = await this.post('/auth/login', { email, password });
-    if (response.success && response.data.token) {
-      this.setTokens(response.data.token, response.data.refreshToken);
+    if (response.success && response.data.tokens?.accessToken) {
+      this.setTokens(response.data.tokens.accessToken, response.data.tokens.refreshToken);
     }
     return response;
   }
 
   async register(userData) {
     const response = await this.post('/auth/register', userData);
-    if (response.success && response.data.token) {
-      this.setTokens(response.data.token, response.data.refreshToken);
+    if (response.success && response.data.tokens?.accessToken) {
+      this.setTokens(response.data.tokens.accessToken, response.data.tokens.refreshToken);
     }
     return response;
   }

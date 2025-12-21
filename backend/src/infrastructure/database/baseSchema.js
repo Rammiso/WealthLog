@@ -136,9 +136,8 @@ const addBaseIndexes = (schema) => {
   // Compound index for user queries
   schema.index({ userId: 1, deletedAt: 1 });
   
-  // Index for timestamps
-  schema.index({ createdAt: -1 });
-  schema.index({ updatedAt: -1 });
+  // Note: createdAt and updatedAt indexes are automatically created by timestamps: true
+  // so we don't need to add them manually to avoid duplicate index warnings
 };
 
 /**
