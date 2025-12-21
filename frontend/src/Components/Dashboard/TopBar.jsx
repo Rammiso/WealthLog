@@ -1,14 +1,38 @@
 import { Bell, Search, User, ChevronDown, Plus, Target, TrendingUp, TrendingDown } from "lucide-react";
 import { useState, useCallback, useEffect, memo } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import TransactionForm from "./TransactionForm";
 
-const TopBar = memo(function TopBar() {
+const TopBar = memo(function TopBar({ currentPath = "/dashboard" }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Get page title based on current path
+  const getPageTitle = () => {
+    switch (currentPath) {
+      case '/dashboard/income':
+        return { title: 'Income Management', subtitle: 'Track and manage your income sources' };
+      case '/dashboard/expenses':
+        return { title: 'Expense Tracking', subtitle: 'Monitor and control your spending' };
+      case '/dashboard/categories':
+        return { title: 'Category Management', subtitle: 'Organize your financial categories' };
+      case '/dashboard/goals':
+        return { title: 'Financial Goals', subtitle: 'Set and track your financial objectives' };
+      case '/dashboard/settings':
+        return { title: 'Settings', subtitle: 'Customize your account preferences' };
+      case '/dashboard/profile':
+        return { title: 'Profile', subtitle: 'Manage your personal information' };
+      default:
+        return { title: 'Dashboard', subtitle: "Welcome back! Here's your financial overview." };
+    }
+  };
+
+  const { title, subtitle } = getPageTitle();
 
   const notifications = [
     { id: 1, message: "Budget limit reached for Food category", type: "warning", time: "2 min ago" },
@@ -40,8 +64,8 @@ const TopBar = memo(function TopBar() {
         <div className="flex items-center justify-between">
           {/* Page Title */}
           <div>
-            <h1 className="text-2xl font-bold text-gray-100">Dashboard</h1>
-            <p className="text-gray-400 text-sm">Welcome back! Here's your financial overview.</p>
+            <h1 className="text-2xl font-bold text-gray-100">{title}</h1>
+            <p className="text-gray-400 text-sm">{subtitle}</p>
           </div>
 
           {/* Right Section */}
@@ -147,13 +171,13 @@ const TopBar = memo(function TopBar() {
                 <div className="absolute right-0 top-full mt-2 w-48 bg-dark-secondary border border-gray-700 rounded-lg shadow-2xl z-50">
                   <div className="p-2">
                     <button 
-                      onClick={() => window.location.href = '/dashboard/profile'}
+                      onClick={() => navigate('/dashboard/profile')}
                       className="w-full text-left p-2 rounded hover:bg-white/5 transition-colors text-gray-200 text-sm"
                     >
                       Profile Settings
                     </button>
                     <button 
-                      onClick={() => window.location.href = '/dashboard/settings'}
+                      onClick={() => navigate('/dashboard/settings')}
                       className="w-full text-left p-2 rounded hover:bg-white/5 transition-colors text-gray-200 text-sm"
                     >
                       Account Preferences

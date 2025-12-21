@@ -251,12 +251,8 @@ export default function Settings() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-          <p className="text-gray-400">Manage your account preferences and settings</p>
-        </div>
+      {/* Quick Action Button */}
+      <div className="flex justify-end">
         <motion.button
           onClick={handleSave}
           className="flex items-center gap-2 px-6 py-3 bg-neon-green/10 border border-neon-green/30 rounded-lg text-neon-green hover:bg-neon-green/20 transition-all duration-300 font-mono"

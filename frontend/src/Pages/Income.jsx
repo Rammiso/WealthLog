@@ -9,24 +9,36 @@ export default function Income() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const { transactions, categories, loadTransactions, loadCategories } = useApp();
+  const { transactions, categories, loadTransactions, loadCategories, loadingStates } = useApp();
 
   useEffect(() => {
-    loadTransactions({ type: 'income' });
+    loadTransactions(); // Load all transactions, filter locally
     loadCategories();
   }, [loadTransactions, loadCategories]);
 
-  const incomeTransactions = transactions.filter(t => t.type === 'income');
+  // Add safety checks for data
+  const safeTransactions = Array.isArray(transactions) ? transactions : [];
+  const safeCategories = Array.isArray(categories) ? categories : [];
+  
+  const incomeTransactions = safeTransactions.filter(t => t.type === 'income');
   const totalIncome = incomeTransactions.reduce((sum, t) => sum + t.amount, 0);
+
+  // Show loading state
+  if (loadingStates?.transactions) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading income data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Income Management</h1>
-          <p className="text-gray-400">Track and manage your income sources</p>
-        </div>
+      {/* Quick Action Button */}
+      <div className="flex justify-end">
         <motion.button
           onClick={() => setShowTransactionForm(true)}
           className="flex items-center gap-2 px-6 py-3 bg-neon-green/10 border border-neon-green/30 rounded-lg text-neon-green hover:bg-neon-green/20 transition-all duration-300 font-mono"
@@ -153,7 +165,7 @@ export default function Income() {
         onClose={() => setShowTransactionForm(false)}
         onSuccess={() => {
           setShowTransactionForm(false);
-          loadTransactions({ type: 'income' });
+          loadTransactions(); // Reload all transactions
         }}
         defaultType="income"
       />

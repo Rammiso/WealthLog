@@ -47,32 +47,26 @@ export default function Profile() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Profile</h1>
-          <p className="text-gray-400">Manage your personal information and account settings</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <motion.button
-            onClick={() => setIsEditing(!isEditing)}
-            className="flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-lg text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Edit className="w-4 h-4" />
-            {isEditing ? 'Cancel' : 'Edit Profile'}
-          </motion.button>
-          <motion.button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/20 transition-all duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <LogOut className="w-4 h-4" />
-            Log Out
-          </motion.button>
-        </div>
+      {/* Quick Action Buttons */}
+      <div className="flex justify-end gap-3">
+        <motion.button
+          onClick={() => setIsEditing(!isEditing)}
+          className="flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-lg text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Edit className="w-4 h-4" />
+          {isEditing ? 'Cancel' : 'Edit Profile'}
+        </motion.button>
+        <motion.button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/20 transition-all duration-300"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <LogOut className="w-4 h-4" />
+          Log Out
+        </motion.button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

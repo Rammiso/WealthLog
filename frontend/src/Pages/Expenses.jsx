@@ -9,16 +9,32 @@ export default function Expenses() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const { transactions, categories, loadTransactions, loadCategories } = useApp();
+  const { transactions, categories, loadTransactions, loadCategories, loadingStates } = useApp();
 
   useEffect(() => {
-    loadTransactions({ type: 'expense' });
+    loadTransactions(); // Load all transactions, filter locally
     loadCategories();
   }, [loadTransactions, loadCategories]);
 
-  const expenseTransactions = transactions.filter(t => t.type === 'expense');
+  // Add safety checks for data
+  const safeTransactions = Array.isArray(transactions) ? transactions : [];
+  const safeCategories = Array.isArray(categories) ? categories : [];
+  
+  const expenseTransactions = safeTransactions.filter(t => t.type === 'expense');
   const totalExpenses = expenseTransactions.reduce((sum, t) => sum + t.amount, 0);
-  const expenseCategories = categories.filter(c => c.type === 'expense');
+  const expenseCategories = safeCategories.filter(c => c.type === 'expense');
+
+  // Show loading state
+  if (loadingStates?.transactions) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-red-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading expense data...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Group expenses by category
   const expensesByCategory = expenseCategories.map(category => {
@@ -34,12 +50,8 @@ export default function Expenses() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Expense Management</h1>
-          <p className="text-gray-400">Track and categorize your expenses</p>
-        </div>
+      {/* Quick Action Button */}
+      <div className="flex justify-end">
         <motion.button
           onClick={() => setShowTransactionForm(true)}
           className="flex items-center gap-2 px-6 py-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/20 transition-all duration-300 font-mono"
@@ -219,7 +231,7 @@ export default function Expenses() {
         onClose={() => setShowTransactionForm(false)}
         onSuccess={() => {
           setShowTransactionForm(false);
-          loadTransactions({ type: 'expense' });
+          loadTransactions(); // Reload all transactions
         }}
         defaultType="expense"
       />

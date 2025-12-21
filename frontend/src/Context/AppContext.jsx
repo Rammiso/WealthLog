@@ -119,21 +119,25 @@ function appReducer(state, action) {
     case APP_ACTIONS.ADD_CATEGORY:
       return {
         ...state,
-        categories: [...state.categories, action.payload.category],
+        categories: [...(Array.isArray(state.categories) ? state.categories : []), action.payload.category],
       };
 
     case APP_ACTIONS.UPDATE_CATEGORY:
       return {
         ...state,
-        categories: state.categories.map(cat =>
-          cat.id === action.payload.category.id ? action.payload.category : cat
-        ),
+        categories: Array.isArray(state.categories)
+          ? state.categories.map(cat =>
+              cat.id === action.payload.category.id ? action.payload.category : cat
+            )
+          : [action.payload.category],
       };
 
     case APP_ACTIONS.DELETE_CATEGORY:
       return {
         ...state,
-        categories: state.categories.filter(cat => cat.id !== action.payload.categoryId),
+        categories: Array.isArray(state.categories) 
+          ? state.categories.filter(cat => cat.id !== action.payload.categoryId)
+          : [],
       };
 
     // Transactions
@@ -163,21 +167,25 @@ function appReducer(state, action) {
     case APP_ACTIONS.ADD_TRANSACTION:
       return {
         ...state,
-        transactions: [action.payload.transaction, ...state.transactions],
+        transactions: [action.payload.transaction, ...(Array.isArray(state.transactions) ? state.transactions : [])],
       };
 
     case APP_ACTIONS.UPDATE_TRANSACTION:
       return {
         ...state,
-        transactions: state.transactions.map(txn =>
-          txn.id === action.payload.transaction.id ? action.payload.transaction : txn
-        ),
+        transactions: Array.isArray(state.transactions) 
+          ? state.transactions.map(txn =>
+              txn.id === action.payload.transaction.id ? action.payload.transaction : txn
+            )
+          : [action.payload.transaction],
       };
 
     case APP_ACTIONS.DELETE_TRANSACTION:
       return {
         ...state,
-        transactions: state.transactions.filter(txn => txn.id !== action.payload.transactionId),
+        transactions: Array.isArray(state.transactions) 
+          ? state.transactions.filter(txn => txn.id !== action.payload.transactionId)
+          : [],
       };
 
     // Goals
@@ -207,21 +215,25 @@ function appReducer(state, action) {
     case APP_ACTIONS.ADD_GOAL:
       return {
         ...state,
-        goals: [...state.goals, action.payload.goal],
+        goals: [...(Array.isArray(state.goals) ? state.goals : []), action.payload.goal],
       };
 
     case APP_ACTIONS.UPDATE_GOAL:
       return {
         ...state,
-        goals: state.goals.map(goal =>
-          goal.id === action.payload.goal.id ? action.payload.goal : goal
-        ),
+        goals: Array.isArray(state.goals)
+          ? state.goals.map(goal =>
+              goal.id === action.payload.goal.id ? action.payload.goal : goal
+            )
+          : [action.payload.goal],
       };
 
     case APP_ACTIONS.DELETE_GOAL:
       return {
         ...state,
-        goals: state.goals.filter(goal => goal.id !== action.payload.goalId),
+        goals: Array.isArray(state.goals)
+          ? state.goals.filter(goal => goal.id !== action.payload.goalId)
+          : [],
       };
 
     // Dashboard

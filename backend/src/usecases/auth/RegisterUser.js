@@ -11,8 +11,9 @@ const jwtService = require('../../infrastructure/services/JwtService');
  */
 
 class RegisterUser {
-  constructor(userRepository) {
+  constructor(userRepository, categoryRepository) {
     this.userRepository = userRepository;
+    this.categoryRepository = categoryRepository;
   }
 
   async execute(registrationData) {
@@ -66,6 +67,18 @@ class RegisterUser {
 
       // Update last login
       await createdUser.updateLastLogin();
+
+      // Create default categories for the new user
+      try {
+        await this.categoryRepository.createDefaultCategories(createdUser.id);
+        logger.info('Default categories created for new user', { userId: createdUser.id });
+      } catch (error) {
+        logger.warn('Failed to create default categories for new user', { 
+          userId: createdUser.id, 
+          error: error.message 
+        });
+        // Don't fail registration if category creation fails
+      }
 
       // Prepare response data
       const responseData = {

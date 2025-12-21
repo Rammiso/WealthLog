@@ -14,16 +14,31 @@ export default function Goals() {
     endDate: '',
     priority: 'medium'
   });
-  const { goals, loadGoals, createGoal, updateGoal, deleteGoal } = useApp();
+  const { goals, loadGoals, createGoal, updateGoal, deleteGoal, loadingStates } = useApp();
 
   useEffect(() => {
     loadGoals();
   }, [loadGoals]);
 
-  const activeGoals = goals.filter(g => g.status === 'active');
-  const completedGoals = goals.filter(g => g.status === 'completed');
-  const totalTargetAmount = goals.reduce((sum, g) => sum + g.targetAmount, 0);
-  const totalCurrentAmount = goals.reduce((sum, g) => sum + g.currentAmount, 0);
+  // Add safety checks for data
+  const safeGoals = Array.isArray(goals) ? goals : [];
+  
+  const activeGoals = safeGoals.filter(g => g.status === 'active');
+  const completedGoals = safeGoals.filter(g => g.status === 'completed');
+  const totalTargetAmount = safeGoals.reduce((sum, g) => sum + g.targetAmount, 0);
+  const totalCurrentAmount = safeGoals.reduce((sum, g) => sum + g.currentAmount, 0);
+
+  // Show loading state
+  if (loadingStates?.goals) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading goals...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,12 +107,8 @@ export default function Goals() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Financial Goals</h1>
-          <p className="text-gray-400">Set and track your financial objectives</p>
-        </div>
+      {/* Quick Action Button */}
+      <div className="flex justify-end">
         <motion.button
           onClick={() => setShowGoalForm(true)}
           className="flex items-center gap-2 px-6 py-3 bg-neon-cyan/10 border border-neon-cyan/30 rounded-lg text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 font-mono"

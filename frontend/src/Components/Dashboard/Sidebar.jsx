@@ -12,6 +12,7 @@ import {
   LogOut
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 
 const navigationItems = [
@@ -26,9 +27,10 @@ const navigationItems = [
 export default function Sidebar({ collapsed, onToggle, currentPath = "/dashboard" }) {
   const [hoveredItem, setHoveredItem] = useState(null);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleNavigation = (path) => {
-    window.location.href = path;
+    navigate(path);
   };
 
   const handleLogout = async () => {

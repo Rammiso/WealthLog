@@ -26,6 +26,29 @@ const GoalsProgress = memo(function GoalsProgress({ data }) {
     return "neon-magenta";
   };
 
+  // Handle empty data
+  if (!data || data.length === 0) {
+    return (
+      <Card className="p-6" hover={false}>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-100 mb-1">Financial Goals</h3>
+            <p className="text-gray-400 text-sm">Track your savings progress</p>
+          </div>
+          <Target className="w-6 h-6 text-neon-cyan" />
+        </div>
+
+        <div className="text-center py-8">
+          <Target className="w-12 h-12 text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-400 mb-4">No financial goals set</p>
+          <button className="py-2 px-4 bg-neon-cyan/10 border border-neon-cyan/20 rounded-lg text-neon-cyan text-sm font-medium hover:bg-neon-cyan/20 transition-colors">
+            Create Your First Goal
+          </button>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card className="p-6" hover={false}>
         <div className="flex items-center justify-between mb-6">

@@ -23,7 +23,13 @@ class GetCategories {
         categories = await this.categoryRepository.getCategoriesWithUsage(userId, type);
       } else {
         // Get basic categories
-        categories = await this.categoryRepository.findByUser(userId, type);
+        const result = await this.categoryRepository.findByUser(userId, type);
+        categories = result.data || result; // Handle both formats
+      }
+
+      // Ensure categories is an array
+      if (!Array.isArray(categories)) {
+        categories = [];
       }
 
       // Format response

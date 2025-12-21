@@ -22,7 +22,7 @@ async function createSampleData() {
     logger.info('Connected to MongoDB');
 
     // Find the first user (or create one)
-    let user = await User.findOne({ email: 'fixed@test.com' });
+    let user = await User.findOne({ email: 'mushas1248@gmail.com' });
     
     if (!user) {
       console.log('No user found. Please register a user first at /auth/register');

@@ -6,14 +6,14 @@ import Input from '../ui/Input';
 import Button from '../ui/Button';
 import Card from '../ui/Card';
 
-export default function TransactionForm({ isOpen, onClose, transaction = null, onSuccess }) {
+export default function TransactionForm({ isOpen, onClose, transaction = null, onSuccess, defaultType = 'expense' }) {
   const [formData, setFormData] = useState({
     amount: '',
     description: '',
     notes: '',
     categoryId: '',
     date: new Date().toISOString().split('T')[0],
-    type: 'expense',
+    type: defaultType,
     currency: 'ETB'
   });
 
@@ -48,7 +48,7 @@ export default function TransactionForm({ isOpen, onClose, transaction = null, o
         notes: '',
         categoryId: '',
         date: new Date().toISOString().split('T')[0],
-        type: 'expense',
+        type: defaultType,
         currency: 'ETB'
       });
     }
@@ -129,18 +129,22 @@ export default function TransactionForm({ isOpen, onClose, transaction = null, o
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        transition={{ duration: 0.3 }}
-        className="w-full max-w-md"
-      >
-        <Card className="p-6 border-neon-cyan/30">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 overflow-y-auto">
+      <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ duration: 0.3 }}
+          className="w-full max-w-md"
+        >
+        <Card className="p-4 sm:p-6 border-neon-cyan/30 max-h-[90vh] overflow-y-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white font-secondary">
-              {transaction ? 'Edit Transaction' : 'Add Transaction'}
+              {transaction 
+                ? `Edit ${transaction.type === 'income' ? 'Income' : 'Expense'}` 
+                : `Add ${formData.type === 'income' ? 'Income' : 'Expense'}`
+              }
             </h2>
             <motion.button
               onClick={onClose}
@@ -303,7 +307,10 @@ export default function TransactionForm({ isOpen, onClose, transaction = null, o
                   </div>
                 ) : (
                   <span className="font-mono uppercase tracking-wider">
-                    {transaction ? 'Update' : 'Add'} Transaction
+                    {transaction 
+                      ? `Update ${transaction.type === 'income' ? 'Income' : 'Expense'}`
+                      : `Add ${formData.type === 'income' ? 'Income' : 'Expense'}`
+                    }
                   </span>
                 )}
               </Button>
@@ -311,6 +318,7 @@ export default function TransactionForm({ isOpen, onClose, transaction = null, o
           </form>
         </Card>
       </motion.div>
+      </div>
     </div>
   );
 }

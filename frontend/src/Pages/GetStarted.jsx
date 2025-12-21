@@ -129,9 +129,16 @@ export default function GetStarted() {
       
       if (result.success) {
         setSuccess(true);
-        // Redirect to dashboard after showing success message
+        // Redirect to dashboard with initial data
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate('/dashboard', { 
+            state: { 
+              initialData: {
+                income: formData.income,
+                financialGoal: formData.financialGoal
+              }
+            }
+          });
         }, 2000);
       } else {
         setErrors({ general: result.error });

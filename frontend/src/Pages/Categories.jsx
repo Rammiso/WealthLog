@@ -12,14 +12,29 @@ export default function Categories() {
     color: '#FF6B6B',
     icon: '📊'
   });
-  const { categories, loadCategories, createCategory, updateCategory, deleteCategory } = useApp();
+  const { categories, loadCategories, createCategory, updateCategory, deleteCategory, loadingStates } = useApp();
 
   useEffect(() => {
     loadCategories();
   }, [loadCategories]);
 
-  const incomeCategories = categories.filter(c => c.type === 'income');
-  const expenseCategories = categories.filter(c => c.type === 'expense');
+  // Add safety checks for data
+  const safeCategories = Array.isArray(categories) ? categories : [];
+  
+  const incomeCategories = safeCategories.filter(c => c.type === 'income');
+  const expenseCategories = safeCategories.filter(c => c.type === 'expense');
+
+  // Show loading state
+  if (loadingStates?.categories) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-neon-cyan border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading categories...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,12 +81,8 @@ export default function Categories() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Categories</h1>
-          <p className="text-gray-400">Organize your transactions with custom categories</p>
-        </div>
+      {/* Quick Action Button */}
+      <div className="flex justify-end">
         <motion.button
           onClick={() => setShowCategoryForm(true)}
           className="flex items-center gap-2 px-6 py-3 bg-neon-cyan/10 border border-neon-cyan/30 rounded-lg text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 font-mono"

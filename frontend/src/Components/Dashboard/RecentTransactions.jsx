@@ -45,6 +45,36 @@ const RecentTransactions = memo(function RecentTransactions({ data }) {
     return `ETB ${absAmount.toLocaleString()}`;
   };
 
+  // Handle empty data
+  if (!data || data.length === 0) {
+    return (
+      <Card className="p-6" hover={false}>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h3 className="text-xl font-semibold text-gray-100 mb-1">Recent Transactions</h3>
+            <p className="text-gray-400 text-sm">Latest financial activity</p>
+          </div>
+          
+          <button className="text-neon-cyan hover:text-neon-blue transition-colors text-sm font-medium">
+            View All
+          </button>
+        </div>
+
+        <div className="text-center py-8">
+          <p className="text-gray-400 mb-4">No transactions yet</p>
+          <div className="flex gap-2">
+            <button className="flex-1 py-2 px-3 bg-neon-cyan/10 border border-neon-cyan/20 rounded-lg text-neon-cyan text-sm font-medium hover:bg-neon-cyan/20 transition-colors">
+              Add Income
+            </button>
+            <button className="flex-1 py-2 px-3 bg-neon-magenta/10 border border-neon-magenta/20 rounded-lg text-neon-magenta text-sm font-medium hover:bg-neon-magenta/20 transition-colors">
+              Add Expense
+            </button>
+          </div>
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card className="p-6" hover={false}>
         <div className="flex items-center justify-between mb-6">

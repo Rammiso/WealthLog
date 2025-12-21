@@ -14,7 +14,9 @@ const { getUserRepository } = require('../../infrastructure/repositories/Reposit
 class AuthController {
   constructor() {
     this.userRepository = getUserRepository();
-    this.registerUser = new RegisterUser(this.userRepository);
+    const { getCategoryRepository } = require('../../infrastructure/repositories/RepositoryFactory');
+    this.categoryRepository = getCategoryRepository();
+    this.registerUser = new RegisterUser(this.userRepository, this.categoryRepository);
     this.loginUser = new LoginUser(this.userRepository);
   }
 
