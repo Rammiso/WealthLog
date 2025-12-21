@@ -1,8 +1,14 @@
-const dotenv = require('dotenv');
-const path = require('path');
-
-// Load environment variables from .env file
-dotenv.config({ path: path.join(__dirname, '../../.env') });
+// Load environment variables from .env file in development
+try {
+  if (process.env.NODE_ENV !== 'production') {
+    const dotenv = require('dotenv');
+    const path = require('path');
+    dotenv.config({ path: path.join(__dirname, '../../.env') });
+  }
+} catch (error) {
+  // dotenv not available or .env file not found - this is okay in production
+  console.log('dotenv not loaded - using environment variables directly');
+}
 
 const config = {
   // Server Configuration
