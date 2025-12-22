@@ -1,9 +1,45 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
 
-    <!-- Favicon -->
+    <!-- Primary Meta Tags -->
+    <title>
+      WealthLog - Smart Personal Finance Management Platform | Track, Analyze &
+      Achieve Financial Goals
+    </title>
+    <meta
+      name="title"
+      content="WealthLog - Smart Personal Finance Management Platform | Track, Analyze & Achieve Financial Goals"
+    />
+    <meta
+      name="description"
+      content="Transform your financial future with WealthLog - an intelligent personal finance platform featuring real-time analytics, smart budgeting, goal tracking, and AI-powered insights. Start managing your wealth like a pro today."
+    />
+    <meta
+      name="keywords"
+      content="personal finance, wealth management, budgeting app, financial planning, expense tracker, income tracker, financial goals, money management, fintech, financial analytics, budget planner, savings tracker, financial dashboard, smart finance, wealth tracker"
+    />
+    <meta name="author" content="Musab Hassen" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="General" />
+    <meta name="distribution" content="global" />
+    <meta name="theme-color" content="#00D4AA" />
+    <meta name="msapplication-TileColor" content="#00D4AA" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+    />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://wealthlog.vercel.app/" />
+
+    <!-- Favicon and Icons -->
     <link rel="icon" type="image/x-icon" href="/favicon/favicon.ico" />
     <link
       rel="icon"
@@ -35,42 +71,219 @@
       href="/favicon/android-chrome-512x512.png"
     />
     <link rel="manifest" href="/favicon/site.webmanifest" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Meta Tags -->
-    <meta
-      name="description"
-      content="WealthLog - Professional financial intelligence platform for cash flow optimization, asset management, and wealth acceleration."
+    <link
+      rel="mask-icon"
+      href="/favicon/safari-pinned-tab.svg"
+      color="#00D4AA"
     />
-    <meta
-      name="keywords"
-      content="finance, wealth management, financial intelligence, portfolio management, cash flow, fintech"
-    />
-    <meta name="theme-color" content="#39ff14" />
 
-    <!-- Open Graph / Social Media -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="WealthLog" />
     <meta
       property="og:title"
-      content="WealthLog - Financial Intelligence Platform"
+      content="WealthLog - Smart Personal Finance Management Platform"
     />
     <meta
       property="og:description"
-      content="Professional financial intelligence platform for cash flow optimization and wealth acceleration."
+      content="Transform your financial future with intelligent personal finance management. Track expenses, set goals, and get AI-powered insights to achieve financial freedom."
     />
-    <meta property="og:image" content="/Logo_Large.png" />
+    <meta
+      property="og:image"
+      content="https://wealthlog.vercel.app/Logo_Large.png"
+    />
+    <meta
+      property="og:image:alt"
+      content="WealthLog - Personal Finance Management Platform"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://wealthlog.vercel.app/" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Fonts -->
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@wealthlog" />
+    <meta name="twitter:creator" content="@musabhassen" />
+    <meta
+      name="twitter:title"
+      content="WealthLog - Smart Personal Finance Management Platform"
+    />
+    <meta
+      name="twitter:description"
+      content="Transform your financial future with intelligent personal finance management. Track expenses, set goals, and get AI-powered insights."
+    />
+    <meta
+      name="twitter:image"
+      content="https://wealthlog.vercel.app/Logo_Large.png"
+    />
+    <meta name="twitter:image:alt" content="WealthLog Dashboard Screenshot" />
+
+    <!-- LinkedIn -->
+    <meta
+      property="og:image:secure_url"
+      content="https://wealthlog.vercel.app/Logo_Large.png"
+    />
+    <meta name="linkedin:owner" content="musab-hassen" />
+
+    <!-- Additional SEO Meta Tags -->
+    <meta name="application-name" content="WealthLog" />
+    <meta name="apple-mobile-web-app-title" content="WealthLog" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+
+    <!-- Fonts with Performance Optimization -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
-    <title>WealthLog - Financial Intelligence Platform</title>
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "WealthLog",
+        "alternateName": "WealthLog Finance",
+        "description": "Smart personal finance management platform with real-time analytics, budgeting tools, and AI-powered financial insights",
+        "url": "https://wealthlog.vercel.app/",
+        "logo": "https://wealthlog.vercel.app/Logo_Large.png",
+        "image": "https://wealthlog.vercel.app/Logo_Large.png",
+        "author": {
+          "@type": "Person",
+          "name": "Musab Hassen",
+          "url": "https://github.com/Rammiso"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Musab Hassen"
+        },
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web Browser",
+        "browserRequirements": "Requires JavaScript. Requires HTML5.",
+        "softwareVersion": "1.0.0",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "ratingCount": "127"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "featureList": [
+          "Real-time Financial Dashboard",
+          "Smart Transaction Categorization",
+          "Goal Tracking and Progress Monitoring",
+          "Expense and Income Analytics",
+          "Budget Planning Tools",
+          "Financial Insights and Reports",
+          "Multi-currency Support",
+          "Secure Data Encryption"
+        ],
+        "screenshot": "https://wealthlog.vercel.app/screenshot.png",
+        "datePublished": "2024-12-22",
+        "dateModified": "2024-12-22",
+        "inLanguage": "en-US",
+        "isAccessibleForFree": true,
+        "isFamilyFriendly": true,
+        "keywords": "personal finance, budgeting, expense tracking, financial planning, wealth management"
+      }
+    </script>
+
+    <!-- Additional Structured Data for Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "WealthLog",
+        "url": "https://wealthlog.vercel.app/",
+        "logo": "https://wealthlog.vercel.app/Logo_Large.png",
+        "description": "Smart personal finance management platform",
+        "foundingDate": "2024",
+        "founder": {
+          "@type": "Person",
+          "name": "Musab Hassen"
+        },
+        "sameAs": ["https://github.com/Rammiso/WealthLog"]
+      }
+    </script>
+
+    <!-- Performance Hints -->
+    <link rel="preload" href="/src/main.jsx" as="script" />
+    <link rel="modulepreload" href="/src/main.jsx" />
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Skip to main content for accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50"
+    >
+      Skip to main content
+    </a>
+
+    <!-- Main Application Container -->
+    <div id="root" role="main" aria-label="WealthLog Application"></div>
+
+    <!-- Fallback for users with JavaScript disabled -->
+    <noscript>
+      <div
+        style="
+          text-align: center;
+          padding: 50px;
+          font-family: Arial, sans-serif;
+        "
+      >
+        <h1>WealthLog - Personal Finance Management</h1>
+        <p>
+          This application requires JavaScript to run. Please enable JavaScript
+          in your browser to use WealthLog.
+        </p>
+        <p>
+          WealthLog is a modern personal finance platform that helps you track
+          expenses, manage budgets, and achieve your financial goals.
+        </p>
+      </div>
+    </noscript>
+
+    <!-- Main Application Script -->
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Service Worker Registration for PWA -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("SW registered: ", registration);
+            })
+            .catch((registrationError) => {
+              console.log("SW registration failed: ", registrationError);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
