@@ -205,11 +205,19 @@ export default function Dashboard() {
     const handleInitialData = async () => {
       const initialData = location.state?.initialData;
       if (initialData && user && categories.length > 0) {
+        // Prevent duplicate creation by checking if we've already processed this data
+        const hasProcessedKey = `processed_initial_data_${user.id}`;
+        if (sessionStorage.getItem(hasProcessedKey)) {
+          return;
+        }
+
         try {
           // Create initial income transaction if provided
           if (initialData.income && parseFloat(initialData.income) > 0) {
-            // Find the Salary category for income
+            // Find the Salary category for income (exact match first, then fallback)
             const salaryCategory = categories.find(cat => 
+              cat.type === 'income' && cat.name === 'Salary'
+            ) || categories.find(cat => 
               cat.type === 'income' && cat.name.toLowerCase().includes('salary')
             );
             
@@ -223,8 +231,12 @@ export default function Dashboard() {
             };
             
             if (incomeData.categoryId) {
-              await createTransaction(incomeData);
-              console.log('Initial income transaction created successfully');
+              const result = await createTransaction(incomeData);
+              if (result.success) {
+                console.log('Initial income transaction created successfully');
+              } else {
+                console.error('Failed to create initial income transaction:', result.error);
+              }
             } else {
               console.warn('No income category found for initial transaction');
             }
@@ -242,20 +254,23 @@ export default function Dashboard() {
               currency: user.currency || 'ETB'
             };
             
-            await createGoal(goalData);
-            console.log('Initial financial goal created successfully');
+            const result = await createGoal(goalData);
+            if (result.success) {
+              console.log('Initial financial goal created successfully');
+            } else {
+              console.error('Failed to create initial goal:', result.error);
+            }
           }
 
+          // Mark as processed to prevent duplication
+          sessionStorage.setItem(hasProcessedKey, 'true');
+          
           // Clear the initial data from location state to prevent re-creation
           window.history.replaceState({}, document.title);
           
-          // Reload data to show the new transactions/goals
+          // Reload data to show the new transactions/goals (single call)
           setTimeout(async () => {
-            await Promise.all([
-              loadTransactions(),
-              loadGoals(),
-              loadAllData()
-            ]);
+            await loadAllData();
           }, 1000);
         } catch (error) {
           console.error('Error creating initial data:', error);
@@ -264,7 +279,7 @@ export default function Dashboard() {
     };
 
     handleInitialData();
-  }, [user, categories, location.state, createTransaction, createGoal, loadTransactions, loadGoals, loadAllData]);
+  }, [user, categories, location.state, createTransaction, createGoal, loadAllData]);
 
   return (
     <ErrorBoundary>

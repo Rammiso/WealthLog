@@ -18,6 +18,28 @@ class CreateTransaction {
     try {
       const sanitizedData = this.validateInput(transactionData);
 
+      // Check for potential duplicate initial transactions
+      if (sanitizedData.description === 'Initial Monthly Income') {
+        const existingInitialTransaction = await this.transactionRepository.findAll(
+          { 
+            description: 'Initial Monthly Income',
+            type: 'income',
+            amount: sanitizedData.amount
+          },
+          { userId, limit: 1 }
+        );
+        
+        if (existingInitialTransaction.data.length > 0) {
+          logger.warn('Duplicate initial transaction attempt prevented', {
+            userId,
+            amount: sanitizedData.amount,
+            existingTransactionId: existingInitialTransaction.data[0].id
+          });
+          // Return the existing transaction instead of creating a duplicate
+          return existingInitialTransaction.data[0].toTransactionJSON();
+        }
+      }
+
       // Validate category exists and belongs to user
       const category = await this.categoryRepository.findUserCategory(userId, sanitizedData.categoryId);
 

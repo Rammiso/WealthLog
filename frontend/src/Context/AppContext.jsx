@@ -511,8 +511,8 @@ export function AppProvider({ children }) {
           message: 'Transaction created successfully',
         });
         
-        // Refresh dashboard data after creating transaction
-        loadDashboardData();
+        // Note: Dashboard data refresh is handled by the calling component
+        // to prevent race conditions during initial setup
         
         return { success: true, data: response.data };
       } else {
@@ -526,7 +526,7 @@ export function AppProvider({ children }) {
       });
       return { success: false, error: error.message };
     }
-  }, [addNotification, loadDashboardData]);
+  }, [addNotification]);
 
   const updateTransaction = useCallback(async (id, transactionData) => {
     try {
