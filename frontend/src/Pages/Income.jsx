@@ -23,7 +23,7 @@ export default function Income() {
   const safeCategories = Array.isArray(categories) ? categories : [];
   
   const incomeTransactions = safeTransactions.filter(t => t.type === 'income');
-  const totalIncome = incomeTransactions.reduce((sum, t) => sum + t.amount, 0);
+  const totalIncome = incomeTransactions.reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0);
 
   // Apply filters
   const filteredIncome = incomeTransactions.filter(transaction => {

@@ -9,8 +9,29 @@ const TopBar = memo(function TopBar({ currentPath = "/dashboard", onTransactionC
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showTransactionForm, setShowTransactionForm] = useState(false);
+  const [notifications, setNotifications] = useState([]);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Load notifications on mount and set up real-time updates
+  useEffect(() => {
+    const loadNotifications = () => {
+      // Mock notifications - replace with real API call
+      const mockNotifications = [
+        { id: 1, message: "Budget limit reached for Food category", type: "warning", time: "2 min ago" },
+        { id: 2, message: "Monthly salary deposited", type: "success", time: "1 hour ago" },
+        { id: 3, message: "Goal deadline approaching: Emergency Fund", type: "info", time: "3 hours ago" }
+      ];
+      setNotifications(mockNotifications);
+    };
+
+    loadNotifications();
+    
+    // Set up polling for real-time updates (every 30 seconds)
+    const interval = setInterval(loadNotifications, 30000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   // Get page title based on current path
   const getPageTitle = () => {
@@ -33,12 +54,6 @@ const TopBar = memo(function TopBar({ currentPath = "/dashboard", onTransactionC
   };
 
   const { title, subtitle } = getPageTitle();
-
-  const notifications = [
-    { id: 1, message: "Budget limit reached for Food category", type: "warning", time: "2 min ago" },
-    { id: 2, message: "Monthly salary deposited", type: "success", time: "1 hour ago" },
-    { id: 3, message: "Goal deadline approaching: Emergency Fund", type: "info", time: "3 hours ago" }
-  ];
 
   const closeDropdowns = useCallback(() => {
     setShowNotifications(false);
@@ -83,6 +98,7 @@ const TopBar = memo(function TopBar({ currentPath = "/dashboard", onTransactionC
               </motion.button>
               
               <motion.button
+                onClick={() => navigate('/dashboard/goals')}
                 className="flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-lg text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 font-mono text-sm"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

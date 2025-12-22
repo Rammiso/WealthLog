@@ -1,4 +1,4 @@
-import { useState, Suspense, lazy, useEffect } from "react";
+import { useState, Suspense, lazy, useEffect, useMemo } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import ErrorBoundary from "../Components/ErrorBoundary";
 import Sidebar from "../Components/Dashboard/Sidebar";
@@ -45,23 +45,25 @@ const LoadingPage = () => (
 const DashboardHome = ({ dashboardData, isLoading, refreshData, user }) => {
   const { transactions } = useApp();
   
-  // Get recent transactions (last 5) - ensure transactions is an array
-  const recentTransactions = Array.isArray(transactions) 
-    ? transactions
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 5)
-        .map(transaction => ({
-          id: transaction.id,
-          description: transaction.description,
-          amount: transaction.amount,
-          type: transaction.type,
-          category: transaction.categoryName || 'Other',
-          date: transaction.date
-        }))
-    : [];
+  // Get recent transactions (last 5) - ensure transactions is an array (memoized)
+  const recentTransactions = useMemo(() => 
+    Array.isArray(transactions) 
+      ? transactions
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 5)
+          .map(transaction => ({
+            id: transaction.id,
+            description: transaction.description,
+            amount: parseFloat(transaction.amount) || 0,
+            type: transaction.type,
+            category: transaction.categoryName || 'Other',
+            date: transaction.date
+          }))
+      : []
+  , [transactions]);
 
-  // Transform dashboard data for components
-  const transformedData = {
+  // Transform dashboard data for components (memoized for performance)
+  const transformedData = useMemo(() => ({
     summary: dashboardData?.stats ? {
       totalIncome: dashboardData.stats.currentMonth?.totalIncome || 0,
       totalExpenses: dashboardData.stats.currentMonth?.totalExpenses || 0,
@@ -76,11 +78,11 @@ const DashboardHome = ({ dashboardData, isLoading, refreshData, user }) => {
       currency: "ETB"
     },
     
-    monthlyData: dashboardData.incomeLine?.data || [],
+    monthlyData: dashboardData?.incomeLine?.data || [],
     
-    expenseCategories: dashboardData.expensesPie?.data || [],
+    expenseCategories: dashboardData?.expensesPie?.data || [],
     
-    categorySpending: dashboardData.categoryBar?.data?.map(item => ({
+    categorySpending: dashboardData?.categoryBar?.data?.map(item => ({
       category: item.name,
       amount: item.value,
       type: item.type
@@ -88,15 +90,15 @@ const DashboardHome = ({ dashboardData, isLoading, refreshData, user }) => {
     
     recentTransactions: recentTransactions,
     
-    goals: dashboardData.goalsProgress?.data?.map(goal => ({
+    goals: dashboardData?.goalsProgress?.data?.map(goal => ({
       id: goal.id,
       title: goal.title,
-      target: goal.targetAmount,
-      current: goal.currentAmount,
+      target: parseFloat(goal.targetAmount) || 0,
+      current: parseFloat(goal.currentAmount) || 0,
       deadline: goal.endDate,
-      progress: goal.progressPercentage
+      progress: goal.progressPercentage || 0
     })) || []
-  };
+  }), [dashboardData, recentTransactions, user?.currency]);
 
   return (
     <main className="p-4 lg:p-6 space-y-6">
@@ -184,21 +186,30 @@ export default function Dashboard() {
   // Load initial data and handle onboarding data
   useEffect(() => {
     const initializeDashboard = async () => {
-      // Load basic data first
-      await Promise.all([
-        loadCategories(),
-        loadTransactions({ limit: 10 }),
-        loadGoals({ limit: 10 }),
-      ]);
-      
-      // Then load dashboard analytics
-      await loadAllData();
+      // Only load dashboard analytics if we're not processing initial data
+      const initialData = location.state?.initialData;
+      if (!initialData) {
+        // Load basic data and dashboard analytics in parallel
+        await Promise.all([
+          loadCategories(),
+          loadTransactions({ limit: 10 }),
+          loadGoals({ limit: 10 }),
+          loadAllData()
+        ]);
+      } else {
+        // Load basic data first for initial setup
+        await Promise.all([
+          loadCategories(),
+          loadTransactions({ limit: 10 }),
+          loadGoals({ limit: 10 })
+        ]);
+      }
     };
 
     if (user) {
       initializeDashboard();
     }
-  }, [user, loadCategories, loadTransactions, loadGoals, loadAllData]);
+  }, [user, loadCategories, loadTransactions, loadGoals, loadAllData, location.state]);
 
   // Handle initial data creation after categories are loaded
   useEffect(() => {
@@ -297,8 +308,7 @@ export default function Dashboard() {
           <TopBar 
             currentPath={location.pathname} 
             onTransactionCreated={() => {
-              // Refresh all dashboard data after transaction creation
-              loadAllData();
+              // Only refresh transactions list, dashboard will auto-update
               loadTransactions();
             }}
           />

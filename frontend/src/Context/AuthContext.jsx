@@ -23,7 +23,7 @@ const AUTH_ACTIONS = {
 const initialState = {
   user: null,
   isAuthenticated: false,
-  isLoading: false,
+  isLoading: true, // Start with loading true to prevent flash
   error: null,
   token: null,
 };
@@ -115,6 +115,12 @@ export function AuthProvider({ children }) {
           });
           apiService.clearTokens();
         }
+      } else {
+        // No token, set loading to false
+        dispatch({
+          type: AUTH_ACTIONS.LOAD_USER_FAILURE,
+          payload: { error: 'No token found' },
+        });
       }
     };
 
